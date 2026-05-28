@@ -1,8 +1,32 @@
+const socket = io(
+    "https://cinco-quiz-backend.onrender.com"
+);
+
+
+// SOCKET CONNECT
+
+socket.on(
+    "connect",
+    () => {
+
+        console.log(
+            "Connected To Server 🚀"
+        );
+
+    }
+);
+
+
+// BUTTONS
+
 const createBtn =
     document.getElementById("create-btn");
 
 const joinBtn =
     document.getElementById("join-btn");
+
+const joinRoomBtn =
+    document.getElementById("join-room-btn");
 
 const backBtn =
     document.getElementById("back-btn");
@@ -19,6 +43,9 @@ const restartBtn =
 const homeBtn =
     document.getElementById("home-btn");
 
+
+// SCREENS
+
 const homeScreen =
     document.getElementById("home-screen");
 
@@ -31,11 +58,17 @@ const quizScreen =
 const resultScreen =
     document.getElementById("result-screen");
 
+
+// TOPICS
+
 const topicButtons =
     document.querySelectorAll(".topic-btn");
 
 const selectedTopicText =
     document.getElementById("selected-topic");
+
+
+// QUIZ
 
 const questionText =
     document.getElementById("question-text");
@@ -48,6 +81,18 @@ const timerText =
 
 const finalScore =
     document.getElementById("final-score");
+
+const progressBar =
+    document.getElementById("progress-bar");
+
+
+// ROOM
+
+const roomInput =
+    document.getElementById("room-input");
+
+const roomStatus =
+    document.getElementById("room-status");
 
 
 // VARIABLES
@@ -67,70 +112,173 @@ let timer;
 let timeLeft = 10;
 
 
-// CREATE QUIZ
+// CREATE ROOM
 
-createBtn.addEventListener("click", () => {
+createBtn.addEventListener(
+    "click",
+    () => {
 
-    homeScreen.style.display =
-        "none";
+        socket.emit(
+            "create-room"
+        );
 
-    setupScreen.style.display =
-        "flex";
+    }
+);
 
-});
+
+// ROOM CREATED
+
+socket.on(
+    "room-created",
+    (roomCode) => {
+
+        roomStatus.innerText =
+            "Room Code : " +
+            roomCode;
+
+        alert(
+            "Room Created 🚀\nCode : " +
+            roomCode
+        );
+
+    }
+);
 
 
 // JOIN QUIZ
 
-joinBtn.addEventListener("click", () => {
+joinBtn.addEventListener(
+    "click",
+    () => {
 
-    alert(
-        "Join Quiz Coming Soon 🚀"
-    );
+        const roomCode =
+            roomInput.value;
 
-});
+        if (roomCode === "") {
+
+            alert(
+                "Enter Room Code ❌"
+            );
+
+            return;
+
+        }
+
+        socket.emit(
+            "join-room",
+            roomCode
+        );
+
+    }
+);
+
+
+// JOIN ROOM BUTTON
+
+joinRoomBtn.addEventListener(
+    "click",
+    () => {
+
+        const roomCode =
+            roomInput.value;
+
+        if (roomCode === "") {
+
+            alert(
+                "Enter Room Code ❌"
+            );
+
+            return;
+
+        }
+
+        socket.emit(
+            "join-room",
+            roomCode
+        );
+
+    }
+);
+
+
+// PLAYER JOINED
+
+socket.on(
+    "player-joined",
+    (count) => {
+
+        roomStatus.innerText =
+            "Players Joined : " +
+            count;
+
+        alert(
+            "Player Joined 🚀"
+        );
+
+    }
+);
+
+
+// ROOM ERROR
+
+socket.on(
+    "room-error",
+    (message) => {
+
+        alert(message);
+
+    }
+);
 
 
 // BACK BUTTON
 
-backBtn.addEventListener("click", () => {
+backBtn.addEventListener(
+    "click",
+    () => {
 
-    setupScreen.style.display =
-        "none";
+        setupScreen.style.display =
+            "none";
 
-    homeScreen.style.display =
-        "flex";
+        homeScreen.style.display =
+            "flex";
 
-});
+    }
+);
 
 
 // TOPIC SELECT
 
 topicButtons.forEach((button) => {
 
-    button.addEventListener("click", () => {
+    button.addEventListener(
+        "click",
+        () => {
 
-        topicButtons.forEach((btn) => {
+            topicButtons.forEach(
+                (btn) => {
 
-            btn.style.background =
-                "rgba(255,255,255,0.1)";
+                    btn.style.background =
+                        "rgba(255,255,255,0.15)";
 
-        });
+                }
+            );
 
-        button.style.background =
-            "#ffffff33";
+            button.style.background =
+                "rgba(255,255,255,0.35)";
 
-        selectedTopic =
-            button.innerText;
+            selectedTopic =
+                button.innerText;
 
-        selectedTopicText.innerText =
-            "Selected Topic : " +
-            selectedTopic;
+            selectedTopicText.innerText =
+                "Selected Topic : " +
+                selectedTopic;
 
-        startQuizBtn.style.display =
-            "inline-block";
+            startQuizBtn.style.display =
+                "block";
 
-    });
+        }
+    );
 
 });
 
@@ -153,7 +301,7 @@ startQuizBtn.addEventListener(
 
         const response =
             await fetch(
-                "http://localhost:5000/quiz"
+                "https://cinco-quiz-backend.onrender.com/quiz"
             );
 
         quizData =
@@ -177,6 +325,15 @@ function loadQuestion() {
 
     selectedAnswer = "";
 
+    const progress =
+        (
+            currentQuestion /
+            quizData.length
+        ) * 100;
+
+    progressBar.style.width =
+        progress + "%";
+
     const currentQuiz =
         quizData[currentQuestion];
 
@@ -190,7 +347,7 @@ function loadQuestion() {
                 currentQuiz.options[index];
 
             button.style.background =
-                "rgba(255,255,255,0.1)";
+                "rgba(255,255,255,0.15)";
 
         }
     );
@@ -229,33 +386,41 @@ function startTimer() {
 
 answerButtons.forEach((button) => {
 
-    button.addEventListener("click", () => {
+    button.addEventListener(
+        "click",
+        () => {
 
-        answerButtons.forEach((btn) => {
+            answerButtons.forEach(
+                (btn) => {
 
-            btn.style.background =
-                "rgba(255,255,255,0.1)";
+                    btn.style.background =
+                        "rgba(255,255,255,0.15)";
 
-        });
+                }
+            );
 
-        button.style.background =
-            "#ffffff33";
+            button.style.background =
+                "rgba(255,255,255,0.35)";
 
-        selectedAnswer =
-            button.innerText;
+            selectedAnswer =
+                button.innerText;
 
-    });
+        }
+    );
 
 });
 
 
 // NEXT BUTTON
 
-nextBtn.addEventListener("click", () => {
+nextBtn.addEventListener(
+    "click",
+    () => {
 
-    nextQuestion();
+        nextQuestion();
 
-});
+    }
+);
 
 
 // NEXT QUESTION
@@ -303,6 +468,9 @@ function showResult() {
 
     resultScreen.style.display =
         "flex";
+
+    progressBar.style.width =
+        "100%";
 
     finalScore.innerText =
         "Your Score : " +

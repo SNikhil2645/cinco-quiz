@@ -1,8 +1,31 @@
 const express = require("express");
 
+const http = require("http");
+
+const { Server } = require("socket.io");
+
 const cors = require("cors");
 
 const app = express();
+
+
+// HTTP SERVER
+
+const server =
+    http.createServer(app);
+
+
+// SOCKET SERVER
+
+const io = new Server(server, {
+
+    cors: {
+
+        origin: "*"
+
+    }
+
+});
 
 
 // MIDDLEWARE
@@ -10,6 +33,11 @@ const app = express();
 app.use(cors());
 
 app.use(express.json());
+
+
+// ROOMS
+
+const rooms = {};
 
 
 // HOME ROUTE
@@ -23,7 +51,7 @@ app.get("/", (req, res) => {
 });
 
 
-// QUIZ API ROUTE
+// QUIZ API
 
 app.get("/quiz", (req, res) => {
 
@@ -81,9 +109,92 @@ app.get("/quiz", (req, res) => {
 });
 
 
+// SOCKET CONNECTION
+
+io.on("connection", (socket) => {
+
+    console.log(
+        "User Connected:",
+        socket.id
+    );
+
+
+    // CREATE ROOM
+
+    socket.on(
+        "create-room",
+        () => {
+
+            const roomCode =
+                Math.floor(
+                    1000 +
+                    Math.random() * 9000
+                ).toString();
+
+            rooms[roomCode] = [];
+
+            socket.join(roomCode);
+
+            rooms[roomCode].push(
+                socket.id
+            );
+
+            socket.emit(
+                "room-created",
+                roomCode
+            );
+
+            console.log(
+                "Room Created:",
+                roomCode
+            );
+
+        }
+    );
+
+
+    // JOIN ROOM
+
+    socket.on(
+        "join-room",
+        (roomCode) => {
+
+            if (rooms[roomCode]) {
+
+                socket.join(roomCode);
+
+                rooms[roomCode].push(
+                    socket.id
+                );
+
+                io.to(roomCode).emit(
+                    "player-joined",
+                    rooms[roomCode].length
+                );
+
+                console.log(
+                    "Player Joined:",
+                    roomCode
+                );
+
+            } else {
+
+                socket.emit(
+                    "room-error",
+                    "Room Not Found ❌"
+                );
+
+            }
+
+        }
+    );
+
+});
+
+
 // SERVER
 
-app.listen(5000, () => {
+server.listen(5000, () => {
 
     console.log(
         "Server running on port 5000 🚀"

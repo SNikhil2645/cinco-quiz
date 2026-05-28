@@ -41,13 +41,42 @@
                 Test your knowledge with our immersive quiz experience
             </p>
 
+
+            <!-- CREATE ROOM -->
+
             <button id="create-btn">
-                Create Quiz
+                Create Room 🚀
             </button>
+
+
+            <!-- JOIN QUIZ -->
 
             <button id="join-btn">
                 Join Quiz
             </button>
+
+
+            <!-- ROOM INPUT -->
+
+            <input
+                type="text"
+                id="room-input"
+                placeholder="Enter Room Code"
+            >
+
+
+            <!-- JOIN ROOM BUTTON -->
+
+            <button id="join-room-btn">
+                Join Room 🚀
+            </button>
+
+
+            <!-- ROOM STATUS -->
+
+            <h3 id="room-status">
+
+            </h3>
 
         </div>
 
@@ -67,6 +96,9 @@
             <h1>
                 Select Topic
             </h1>
+
+
+            <!-- TOPICS -->
 
             <div class="topics">
 
@@ -88,9 +120,15 @@
 
             </div>
 
+
+            <!-- SELECTED TOPIC -->
+
             <h3 id="selected-topic">
                 Selected Topic : None
             </h3>
+
+
+            <!-- START QUIZ -->
 
             <button
                 id="start-quiz-btn"
@@ -98,6 +136,9 @@
             >
                 Start Quiz 🚀
             </button>
+
+
+            <!-- BACK -->
 
             <button id="back-btn">
                 Back
@@ -117,6 +158,7 @@
     >
 
         <div class="glass-card">
+
 
             <!-- PROGRESS BAR -->
 
@@ -166,7 +208,7 @@
             </div>
 
 
-            <!-- NEXT BUTTON -->
+            <!-- NEXT QUESTION -->
 
             <button id="next-btn">
                 Next Question
@@ -195,9 +237,15 @@
                 Your Score : 0
             </h2>
 
+
+            <!-- RESTART -->
+
             <button id="restart-btn">
                 Restart Quiz
             </button>
+
+
+            <!-- HOME -->
 
             <button id="home-btn">
                 Back Home
@@ -207,6 +255,13 @@
 
     </div>
 
+
+    <!-- SOCKET.IO -->
+
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
+
+    <!-- SCRIPT -->
 
     <script src="script.js"></script>
 
