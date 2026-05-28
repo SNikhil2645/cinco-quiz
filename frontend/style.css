@@ -17,8 +17,8 @@ body {
     background:
         linear-gradient(
             135deg,
-            #1d2671,
-            #c33764
+            #667eea,
+            #764ba2
         );
 
     display: flex;
@@ -27,9 +27,120 @@ body {
 
     align-items: center;
 
+    overflow: hidden;
+
     color: white;
 
+    position: relative;
+
 }
+
+
+/* BACKGROUND ANIMATION */
+
+body::before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 400px;
+
+    height: 400px;
+
+    background:
+        rgba(255,255,255,0.08);
+
+    border-radius: 50%;
+
+    top: 10%;
+
+    left: 5%;
+
+    animation:
+        float1 8s infinite ease-in-out;
+
+}
+
+body::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 350px;
+
+    height: 350px;
+
+    background:
+        rgba(255,255,255,0.08);
+
+    border-radius: 50%;
+
+    bottom: 5%;
+
+    right: 10%;
+
+    animation:
+        float2 10s infinite ease-in-out;
+
+}
+
+
+/* FLOAT ANIMATION */
+
+@keyframes float1 {
+
+    0% {
+
+        transform:
+            translateY(0px);
+
+    }
+
+    50% {
+
+        transform:
+            translateY(-30px);
+
+    }
+
+    100% {
+
+        transform:
+            translateY(0px);
+
+    }
+
+}
+
+@keyframes float2 {
+
+    0% {
+
+        transform:
+            translateY(0px);
+
+    }
+
+    50% {
+
+        transform:
+            translateY(30px);
+
+    }
+
+    100% {
+
+        transform:
+            translateY(0px);
+
+    }
+
+}
+
+
+/* SCREEN */
 
 .screen {
 
@@ -43,22 +154,29 @@ body {
 
     padding: 20px;
 
+    position: relative;
+
+    z-index: 1;
+
 }
+
+
+/* GLASS CARD */
 
 .glass-card {
 
     width: 100%;
 
-    max-width: 500px;
+    max-width: 550px;
 
     padding: 40px;
 
-    border-radius: 20px;
+    border-radius: 25px;
 
     background:
-        rgba(255,255,255,0.1);
+        rgba(255,255,255,0.12);
 
-    backdrop-filter: blur(12px);
+    backdrop-filter: blur(15px);
 
     border:
         1px solid rgba(255,255,255,0.2);
@@ -68,9 +186,48 @@ body {
 
     text-align: center;
 
+    animation:
+        fadeIn 1s ease;
+
 }
 
+
+/* FADE ANIMATION */
+
+@keyframes fadeIn {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(20px);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0px);
+
+    }
+
+}
+
+
+/* TITLES */
+
 h1 {
+
+    font-size: 55px;
+
+    margin-bottom: 20px;
+
+}
+
+h2 {
 
     margin-bottom: 20px;
 
@@ -78,32 +235,38 @@ h1 {
 
 p {
 
-    margin-bottom: 25px;
+    font-size: 20px;
 
-    color: rgba(255,255,255,0.8);
+    color:
+        rgba(255,255,255,0.85);
+
+    margin-bottom: 30px;
 
 }
+
+
+/* BUTTONS */
 
 button {
 
     width: 100%;
 
-    padding: 14px;
+    padding: 15px;
 
     margin-top: 15px;
 
     border: none;
 
-    border-radius: 12px;
+    border-radius: 14px;
 
     cursor: pointer;
 
-    font-size: 16px;
+    font-size: 18px;
+
+    color: white;
 
     background:
         rgba(255,255,255,0.15);
-
-    color: white;
 
     transition: 0.3s;
 
@@ -111,12 +274,16 @@ button {
 
 button:hover {
 
+    transform:
+        translateY(-3px);
+
     background:
         rgba(255,255,255,0.25);
 
-    transform: translateY(-2px);
-
 }
+
+
+/* TOPICS */
 
 .topics {
 
@@ -133,6 +300,9 @@ button:hover {
 
 }
 
+
+/* ANSWERS */
+
 .answers {
 
     display: flex;
@@ -145,21 +315,27 @@ button:hover {
 
 }
 
-#timer {
 
-    margin-bottom: 20px;
+/* TIMER */
+
+#timer {
 
     color: #00f5ff;
 
+    margin-bottom: 20px;
+
 }
 
+
+/* FINAL SCORE */
+
 #final-score {
+
+    color: #00ffae;
 
     margin-top: 20px;
 
     margin-bottom: 20px;
-
-    color: #00ffae;
 
 }
 
@@ -197,5 +373,30 @@ button:hover {
         );
 
     transition: 0.4s;
+
+}
+
+
+/* MOBILE */
+
+@media(max-width: 600px) {
+
+    .glass-card {
+
+        padding: 25px;
+
+    }
+
+    h1 {
+
+        font-size: 40px;
+
+    }
+
+    p {
+
+        font-size: 16px;
+
+    }
 
 }
