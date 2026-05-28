@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Cinco Quiz 🚀
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+<body>
+
+    <!-- HOME SCREEN -->
+
+    <div
+        id="home-screen"
+        class="screen"
+    >
+
+        <div class="glass-card">
+
+            <h1>
+                Cinco Quiz 🚀
+            </h1>
+
+            <p>
+                Test your knowledge with our immersive quiz experience
+            </p>
+
+            <button id="create-btn">
+                Create Quiz
+            </button>
+
+            <button id="join-btn">
+                Join Quiz
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- SETUP SCREEN -->
+
+    <div
+        id="setup-screen"
+        class="screen"
+        style="display: none;"
+    >
+
+        <div class="glass-card">
+
+            <h1>
+                Select Topic
+            </h1>
+
+            <div class="topics">
+
+                <button class="topic-btn">
+                    Python
+                </button>
+
+                <button class="topic-btn">
+                    Java
+                </button>
+
+                <button class="topic-btn">
+                    C
+                </button>
+
+                <button class="topic-btn">
+                    HTML
+                </button>
+
+            </div>
+
+            <h3 id="selected-topic">
+                Selected Topic : None
+            </h3>
+
+            <button
+                id="start-quiz-btn"
+                style="display: none;"
+            >
+                Start Quiz 🚀
+            </button>
+
+            <button id="back-btn">
+                Back
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- QUIZ SCREEN -->
+
+    <div
+        id="quiz-screen"
+        class="screen"
+        style="display: none;"
+    >
+
+        <div class="glass-card">
+
+            <!-- PROGRESS BAR -->
+
+            <div class="progress-container">
+
+                <div id="progress-bar">
+
+                </div>
+
+            </div>
+
+
+            <!-- TIMER -->
+
+            <h2 id="timer">
+                Time Left : 10
+            </h2>
+
+
+            <!-- QUESTION -->
+
+            <h1 id="question-text">
+                Question
+            </h1>
+
+
+            <!-- ANSWERS -->
+
+            <div class="answers">
+
+                <button class="answer-btn">
+                    Option 1
+                </button>
+
+                <button class="answer-btn">
+                    Option 2
+                </button>
+
+                <button class="answer-btn">
+                    Option 3
+                </button>
+
+                <button class="answer-btn">
+                    Option 4
+                </button>
+
+            </div>
+
+
+            <!-- NEXT BUTTON -->
+
+            <button id="next-btn">
+                Next Question
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- RESULT SCREEN -->
+
+    <div
+        id="result-screen"
+        class="screen"
+        style="display: none;"
+    >
+
+        <div class="glass-card">
+
+            <h1>
+                Quiz Finished 🎉
+            </h1>
+
+            <h2 id="final-score">
+                Your Score : 0
+            </h2>
+
+            <button id="restart-btn">
+                Restart Quiz
+            </button>
+
+            <button id="home-btn">
+                Back Home
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
