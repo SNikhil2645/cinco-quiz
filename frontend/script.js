@@ -236,3 +236,54 @@ joinBackBtn.addEventListener(
 
     }
 );
+socket.on(
+    "player-joined",
+    (data) => {
+
+        hideAllScreens();
+
+        playerLobby.style.display =
+            "flex";
+
+        hostPlayerCount.innerText =
+            "Players : " +
+            data.players.length;
+
+        playerCount.innerText =
+            "Players : " +
+            data.players.length;
+
+        hostPlayerList.innerHTML = "";
+
+        playerList.innerHTML = "";
+
+        data.players.forEach(
+            (player) => {
+
+                const hostItem =
+                    document.createElement("div");
+
+                hostItem.innerHTML =
+                    "👤 " +
+                    player.username;
+
+                hostPlayerList.appendChild(
+                    hostItem
+                );
+
+                const playerItem =
+                    document.createElement("div");
+
+                playerItem.innerHTML =
+                    "👤 " +
+                    player.username;
+
+                playerList.appendChild(
+                    playerItem
+                );
+
+            }
+        );
+
+    }
+);
