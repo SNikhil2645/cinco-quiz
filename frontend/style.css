@@ -21,12 +21,6 @@ body {
             #764ba2
         );
 
-    display: flex;
-
-    justify-content: center;
-
-    align-items: center;
-
     overflow: hidden;
 
     color: white;
@@ -53,7 +47,7 @@ body::before {
 
     border-radius: 50%;
 
-    top: 10%;
+    top: 5%;
 
     left: 5%;
 
@@ -87,7 +81,7 @@ body::after {
 }
 
 
-/* FLOAT ANIMATION */
+/* FLOAT ANIMATIONS */
 
 @keyframes float1 {
 
@@ -146,6 +140,8 @@ body::after {
 
     width: 100%;
 
+    min-height: 100vh;
+
     display: flex;
 
     justify-content: center;
@@ -187,12 +183,12 @@ body::after {
     text-align: center;
 
     animation:
-        fadeIn 1s ease;
+        fadeIn 0.7s ease;
 
 }
 
 
-/* FADE ANIMATION */
+/* FADE */
 
 @keyframes fadeIn {
 
@@ -221,7 +217,7 @@ body::after {
 
 h1 {
 
-    font-size: 55px;
+    font-size: 50px;
 
     margin-bottom: 20px;
 
@@ -229,18 +225,24 @@ h1 {
 
 h2 {
 
-    margin-bottom: 20px;
+    margin-bottom: 15px;
+
+}
+
+h3 {
+
+    margin-top: 20px;
 
 }
 
 p {
 
-    font-size: 20px;
+    font-size: 18px;
 
     color:
-        rgba(255,255,255,0.85);
+        rgba(255,255,255,0.8);
 
-    margin-bottom: 30px;
+    margin-bottom: 25px;
 
 }
 
@@ -278,25 +280,29 @@ button:hover {
         translateY(-3px);
 
     background:
-        rgba(255,255,255,0.25);
+        rgba(255,255,255,0.28);
 
 }
 
 
-/* TOPICS */
+/* INPUTS */
 
-.topics {
+input,
+select {
 
-    display: grid;
+    width: 100%;
 
-    grid-template-columns:
-        repeat(2, 1fr);
+    padding: 15px;
 
-    gap: 15px;
+    margin-top: 15px;
 
-    margin-top: 20px;
+    border: none;
 
-    margin-bottom: 20px;
+    border-radius: 14px;
+
+    outline: none;
+
+    font-size: 16px;
 
 }
 
@@ -316,26 +322,32 @@ button:hover {
 }
 
 
-/* TIMER */
+/* ANSWER BUTTON */
 
-#timer {
+.answer-btn {
 
-    color: #00f5ff;
-
-    margin-bottom: 20px;
+    background:
+        rgba(255,255,255,0.12);
 
 }
 
 
-/* FINAL SCORE */
+/* SELECTED ANSWER */
 
-#final-score {
+.answer-btn.selected {
 
-    color: #00ffae;
+    background:
+        linear-gradient(
+            90deg,
+            #00f5ff,
+            #8a2be2
+        );
 
-    margin-top: 20px;
+    transform:
+        scale(1.03);
 
-    margin-bottom: 20px;
+    box-shadow:
+        0 0 20px rgba(0,245,255,0.7);
 
 }
 
@@ -377,7 +389,43 @@ button:hover {
 }
 
 
+/* TIMER */
+
+#timer {
+
+    color: #00f5ff;
+
+}
+
+
+/* PLAYER LIST */
+
+#host-player-list,
+#player-list,
+#leaderboard-list {
+
+    margin-top: 20px;
+
+}
+
+
+/* PODIUM */
+
+#podium-container {
+
+    margin-top: 30px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 20px;
+
+}
+
+
 /* MOBILE */
+
 
 @media(max-width: 600px) {
 
@@ -389,31 +437,8 @@ button:hover {
 
     h1 {
 
-        font-size: 40px;
+        font-size: 38px;
 
     }
-
-    p {
-
-        font-size: 16px;
-
-    }
-
-}
-input {
-
-    width: 100%;
-
-    padding: 15px;
-
-    margin-top: 15px;
-
-    border: none;
-
-    border-radius: 12px;
-
-    outline: none;
-
-    font-size: 16px;
 
 }

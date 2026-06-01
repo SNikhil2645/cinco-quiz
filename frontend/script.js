@@ -3,516 +3,235 @@ const socket = io(
 );
 
 
-// SOCKET CONNECT
-
-socket.on(
-    "connect",
-    () => {
-
-        console.log(
-            "Connected To Server 🚀"
-        );
-
-    }
-);
-
-
-// BUTTONS
-
-const createBtn =
-    document.getElementById("create-btn");
-
-const joinBtn =
-    document.getElementById("join-btn");
-
-const joinRoomBtn =
-    document.getElementById("join-room-btn");
-
-const backBtn =
-    document.getElementById("back-btn");
-
-const startQuizBtn =
-    document.getElementById("start-quiz-btn");
-
-const nextBtn =
-    document.getElementById("next-btn");
-
-const restartBtn =
-    document.getElementById("restart-btn");
-
-const homeBtn =
-    document.getElementById("home-btn");
-
-
 // SCREENS
 
 const homeScreen =
     document.getElementById("home-screen");
 
-const setupScreen =
-    document.getElementById("setup-screen");
+const modeScreen =
+    document.getElementById("mode-screen");
+
+const singleplayerScreen =
+    document.getElementById("singleplayer-screen");
+
+const multiplayerScreen =
+    document.getElementById("multiplayer-screen");
+
+const joinScreen =
+    document.getElementById("join-screen");
+
+const hostLobby =
+    document.getElementById("host-lobby");
+
+const playerLobby =
+    document.getElementById("player-lobby");
 
 const quizScreen =
     document.getElementById("quiz-screen");
+
+const leaderboardScreen =
+    document.getElementById("leaderboard-screen");
+
+const podiumScreen =
+    document.getElementById("podium-screen");
 
 const resultScreen =
     document.getElementById("result-screen");
 
 
-// TOPICS
+// BUTTONS
 
-const topicButtons =
-    document.querySelectorAll(".topic-btn");
+const playBtn =
+    document.getElementById("play-btn");
 
-const selectedTopicText =
-    document.getElementById("selected-topic");
+const singleplayerBtn =
+    document.getElementById("singleplayer-btn");
 
+const multiplayerBtn =
+    document.getElementById("multiplayer-btn");
 
-// QUIZ
+const modeBackBtn =
+    document.getElementById("mode-back-btn");
 
-const questionText =
-    document.getElementById("question-text");
+const singleBackBtn =
+    document.getElementById("single-back-btn");
 
-const answerButtons =
-    document.querySelectorAll(".answer-btn");
+const multiplayerBackBtn =
+    document.getElementById("multiplayer-back-btn");
 
-const timerText =
-    document.getElementById("timer");
+const joinBackBtn =
+    document.getElementById("join-back-btn");
 
-const finalScore =
-    document.getElementById("final-score");
+const createRoomBtn =
+    document.getElementById("create-room-btn");
 
-const progressBar =
-    document.getElementById("progress-bar");
+const joinRoomScreenBtn =
+    document.getElementById("join-room-screen-btn");
 
 
-// ROOM
+// UTIL
 
-const roomInput =
-    document.getElementById("room-input");
+function hideAllScreens() {
 
-const roomStatus =
-    document.getElementById("room-status");
+    homeScreen.style.display =
+        "none";
 
+    modeScreen.style.display =
+        "none";
 
-// VARIABLES
+    singleplayerScreen.style.display =
+        "none";
 
-let selectedTopic = "";
+    multiplayerScreen.style.display =
+        "none";
 
-let currentQuestion = 0;
+    joinScreen.style.display =
+        "none";
 
-let score = 0;
+    hostLobby.style.display =
+        "none";
 
-let selectedAnswer = "";
-
-let quizData = [];
-
-let timer;
-
-let timeLeft = 10;
-
-
-// CREATE ROOM
-
-createBtn.addEventListener(
-    "click",
-    () => {
-
-        socket.emit(
-            "create-room"
-        );
-
-    }
-);
-
-
-// ROOM CREATED
-
-socket.on(
-    "room-created",
-    (roomCode) => {
-
-        roomStatus.innerText =
-            "Room Code : " +
-            roomCode;
-
-        alert(
-            "Room Created 🚀\nCode : " +
-            roomCode
-        );
-
-    }
-);
-
-
-// JOIN QUIZ
-
-joinBtn.addEventListener(
-    "click",
-    () => {
-
-        const roomCode =
-            roomInput.value;
-
-        if (roomCode === "") {
-
-            alert(
-                "Enter Room Code ❌"
-            );
-
-            return;
-
-        }
-
-        socket.emit(
-            "join-room",
-            roomCode
-        );
-
-    }
-);
-
-
-// JOIN ROOM BUTTON
-
-joinRoomBtn.addEventListener(
-    "click",
-    () => {
-
-        const roomCode =
-            roomInput.value;
-
-        if (roomCode === "") {
-
-            alert(
-                "Enter Room Code ❌"
-            );
-
-            return;
-
-        }
-
-        socket.emit(
-            "join-room",
-            roomCode
-        );
-
-    }
-);
-
-
-// PLAYER JOINED
-
-socket.on(
-    "player-joined",
-    (count) => {
-
-        roomStatus.innerText =
-            "Players Joined : " +
-            count;
-
-        alert(
-            "Player Joined 🚀"
-        );
-
-    }
-);
-
-
-// ROOM ERROR
-
-socket.on(
-    "room-error",
-    (message) => {
-
-        alert(message);
-
-    }
-);
-
-
-// BACK BUTTON
-
-backBtn.addEventListener(
-    "click",
-    () => {
-
-        setupScreen.style.display =
-            "none";
-
-        homeScreen.style.display =
-            "flex";
-
-    }
-);
-
-
-// TOPIC SELECT
-
-topicButtons.forEach((button) => {
-
-    button.addEventListener(
-        "click",
-        () => {
-
-            topicButtons.forEach(
-                (btn) => {
-
-                    btn.style.background =
-                        "rgba(255,255,255,0.15)";
-
-                }
-            );
-
-            button.style.background =
-                "rgba(255,255,255,0.35)";
-
-            selectedTopic =
-                button.innerText;
-
-            selectedTopicText.innerText =
-                "Selected Topic : " +
-                selectedTopic;
-
-            startQuizBtn.style.display =
-                "block";
-
-        }
-    );
-
-});
-
-
-// START QUIZ
-
-startQuizBtn.addEventListener(
-    "click",
-    async () => {
-
-        setupScreen.style.display =
-            "none";
-
-        quizScreen.style.display =
-            "flex";
-
-        currentQuestion = 0;
-
-        score = 0;
-
-        const response =
-            await fetch(
-                "https://cinco-quiz-backend.onrender.com/quiz"
-            );
-
-        quizData =
-            await response.json();
-
-        loadQuestion();
-
-    }
-);
-
-
-// LOAD QUESTION
-
-function loadQuestion() {
-
-    clearInterval(timer);
-
-    timeLeft = 10;
-
-    startTimer();
-
-    selectedAnswer = "";
-
-    const progress =
-        (
-            currentQuestion /
-            quizData.length
-        ) * 100;
-
-    progressBar.style.width =
-        progress + "%";
-
-    const currentQuiz =
-        quizData[currentQuestion];
-
-    questionText.innerText =
-        currentQuiz.question;
-
-    answerButtons.forEach(
-        (button, index) => {
-
-            button.innerText =
-                currentQuiz.options[index];
-
-            button.style.background =
-                "rgba(255,255,255,0.15)";
-
-        }
-    );
-
-}
-
-
-// TIMER
-
-function startTimer() {
-
-    timerText.innerText =
-        "Time Left : " + timeLeft;
-
-    timer = setInterval(() => {
-
-        timeLeft--;
-
-        timerText.innerText =
-            "Time Left : " + timeLeft;
-
-        if (timeLeft <= 0) {
-
-            clearInterval(timer);
-
-            nextQuestion();
-
-        }
-
-    }, 1000);
-
-}
-
-
-// ANSWER SELECT
-
-answerButtons.forEach((button) => {
-
-    button.addEventListener(
-        "click",
-        () => {
-
-            answerButtons.forEach(
-                (btn) => {
-
-                    btn.style.background =
-                        "rgba(255,255,255,0.15)";
-
-                }
-            );
-
-            button.style.background =
-                "rgba(255,255,255,0.35)";
-
-            selectedAnswer =
-                button.innerText;
-
-        }
-    );
-
-});
-
-
-// NEXT BUTTON
-
-nextBtn.addEventListener(
-    "click",
-    () => {
-
-        nextQuestion();
-
-    }
-);
-
-
-// NEXT QUESTION
-
-function nextQuestion() {
-
-    clearInterval(timer);
-
-    const currentQuiz =
-        quizData[currentQuestion];
-
-    if (
-        selectedAnswer ===
-        currentQuiz.correct
-    ) {
-
-        score++;
-
-    }
-
-    currentQuestion++;
-
-    if (
-        currentQuestion <
-        quizData.length
-    ) {
-
-        loadQuestion();
-
-    } else {
-
-        showResult();
-
-    }
-
-}
-
-
-// SHOW RESULT
-
-function showResult() {
+    playerLobby.style.display =
+        "none";
 
     quizScreen.style.display =
         "none";
 
+    leaderboardScreen.style.display =
+        "none";
+
+    podiumScreen.style.display =
+        "none";
+
     resultScreen.style.display =
-        "flex";
-
-    progressBar.style.width =
-        "100%";
-
-    finalScore.innerText =
-        "Your Score : " +
-        score +
-        "/" +
-        quizData.length;
+        "none";
 
 }
 
 
-// RESTART QUIZ
+// HOME → MODE
 
-restartBtn.addEventListener(
+playBtn.addEventListener(
     "click",
     () => {
 
-        currentQuestion = 0;
+        hideAllScreens();
 
-        score = 0;
-
-        resultScreen.style.display =
-            "none";
-
-        quizScreen.style.display =
+        modeScreen.style.display =
             "flex";
-
-        loadQuestion();
 
     }
 );
 
 
-// BACK HOME
+// MODE → SINGLEPLAYER
 
-homeBtn.addEventListener(
+singleplayerBtn.addEventListener(
     "click",
     () => {
 
-        resultScreen.style.display =
-            "none";
+        hideAllScreens();
+
+        singleplayerScreen.style.display =
+            "flex";
+
+    }
+);
+
+
+// MODE → MULTIPLAYER
+
+multiplayerBtn.addEventListener(
+    "click",
+    () => {
+
+        hideAllScreens();
+
+        multiplayerScreen.style.display =
+            "flex";
+
+    }
+);
+
+
+// MULTIPLAYER → JOIN SCREEN
+
+joinRoomScreenBtn.addEventListener(
+    "click",
+    () => {
+
+        hideAllScreens();
+
+        joinScreen.style.display =
+            "flex";
+
+    }
+);
+
+
+// CREATE ROOM → HOST LOBBY
+
+createRoomBtn.addEventListener(
+    "click",
+    () => {
+
+        hideAllScreens();
+
+        hostLobby.style.display =
+            "flex";
+
+    }
+);
+
+
+// BACK BUTTONS
+
+modeBackBtn.addEventListener(
+    "click",
+    () => {
+
+        hideAllScreens();
 
         homeScreen.style.display =
+            "flex";
+
+    }
+);
+
+
+singleBackBtn.addEventListener(
+    "click",
+    () => {
+
+        hideAllScreens();
+
+        modeScreen.style.display =
+            "flex";
+
+    }
+);
+
+
+multiplayerBackBtn.addEventListener(
+    "click",
+    () => {
+
+        hideAllScreens();
+
+        modeScreen.style.display =
+            "flex";
+
+    }
+);
+
+
+joinBackBtn.addEventListener(
+    "click",
+    () => {
+
+        hideAllScreens();
+
+        multiplayerScreen.style.display =
             "flex";
 
     }
