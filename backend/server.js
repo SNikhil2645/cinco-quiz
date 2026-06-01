@@ -157,7 +157,8 @@ io.on("connection", (socket) => {
 socket.on(
     "join-room",
     (data) => {
-
+        console.log("JOIN DATA:", data);
+console.log("ROOMS:", rooms);
         const roomCode =
             data.roomCode;
 
