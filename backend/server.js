@@ -124,7 +124,7 @@ io.on("connection", (socket) => {
     socket.on(
         "create-room",
         () => {
-
+console.log("ROOMS AFTER CREATE:", rooms);
             const roomCode =
                 Math.floor(
                     1000 +
@@ -159,7 +159,9 @@ socket.on(
     (data) => {
         console.log("JOIN DATA:", data);
 console.log("ROOMS:", rooms);
-        const roomCode =
+        console.log("JOIN REQUEST:", data);
+console.log("ROOMS BEFORE JOIN:", rooms);
+const roomCode =
             data.roomCode;
 
         const username =
