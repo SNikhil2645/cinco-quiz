@@ -154,42 +154,58 @@ io.on("connection", (socket) => {
 
 
     // JOIN ROOM
+socket.on(
+    "join-room",
+    (data) => {
 
-    socket.on(
-        "join-room",
-        (roomCode) => {
+        const roomCode =
+            data.roomCode;
 
-            if (rooms[roomCode]) {
+        const username =
+            data.username;
 
-                socket.join(roomCode);
+        if (!rooms[roomCode]) {
 
-                rooms[roomCode].push(
-                    socket.id
-                );
+            socket.emit(
+                "room-error",
+                "Room Not Found ❌"
+            );
 
-                io.to(roomCode).emit(
-                    "player-joined",
-                    rooms[roomCode].length
-                );
-
-                console.log(
-                    "Player Joined:",
-                    roomCode
-                );
-
-            } else {
-
-                socket.emit(
-                    "room-error",
-                    "Room Not Found ❌"
-                );
-
-            }
+            return;
 
         }
-    );
 
-});
+        socket.join(roomCode);
+
+        rooms[roomCode].push({
+
+            socketId:
+                socket.id,
+
+            username:
+                username
+
+        });
+
+        io.to(roomCode).emit(
+            "player-joined",
+            {
+
+                players:
+                    rooms[roomCode]
+
+            }
+        );
+
+        console.log(
+            username +
+            " joined room " +
+            roomCode
+        );
+
+    }
+);
+    
 
 
 // SERVER
