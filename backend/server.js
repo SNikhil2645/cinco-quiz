@@ -10,11 +10,19 @@ const resultRoutes = require("./routes/results");
 const app = express();
 const server = http.createServer(app);
 
-const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
+const CLIENT_URL = process.env.CLIENT_URL || "*";
+
+const allowedOrigins = [CLIENT_URL, "http://localhost:5173", "http://localhost:3000"];
 
 const io = require("socket.io")(server, {
   cors: {
-    origin: [CLIENT_URL, "http://localhost:5173", "http://localhost:3000"],
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin) || origin.endsWith(".vercel.app")) {
+        callback(null, true);
+      } else {
+        callback(null, true);
+      }
+    },
     methods: ["GET", "POST"],
   },
   pingInterval: 25000,
@@ -22,7 +30,13 @@ const io = require("socket.io")(server, {
 });
 
 app.use(cors({
-  origin: [CLIENT_URL, "http://localhost:5173", "http://localhost:3000"],
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin) || origin.endsWith(".vercel.app")) {
+      callback(null, true);
+    } else {
+      callback(null, true);
+    }
+  },
   methods: ["GET", "POST"],
 }));
 app.use(express.json());
