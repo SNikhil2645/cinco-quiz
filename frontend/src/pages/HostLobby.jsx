@@ -8,8 +8,8 @@ import socket from "../socket/service";
 export default function HostLobby() {
   const navigate = useNavigate();
   const { username, roomCode } = useUserStore();
-  const { setPlayers, resetGame } = useGameStore();
-  const [players, setPlayersLocal] = useState([]);
+  const { setPlayers, resetGame, players: storePlayers } = useGameStore();
+  const [players, setPlayersLocal] = useState(storePlayers);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
@@ -22,13 +22,7 @@ export default function HostLobby() {
       setPlayers(data.players);
     };
 
-    const handleQuizStarted = (data) => {
-      useGameStore.getState().setQuestion(
-        data.question,
-        data.questionIndex,
-        data.totalQuestions
-      );
-      useGameStore.getState().timeLeft = data.timePerQuestion;
+    const handleQuizStarted = () => {
       navigate("/quiz");
     };
 

@@ -85,7 +85,11 @@ module.exports = function (io) {
       }
 
       socket.join(code);
-      socket.emit("room-created", code);
+      socket.emit("room-created", {
+        roomCode: code,
+        players: rooms[code].players.map((p) => ({ username: p.username, isHost: p.socketId === rooms[code].host })),
+      });
+
       console.log("Room created:", code);
     });
 
@@ -138,7 +142,7 @@ module.exports = function (io) {
 
       room.status = "active";
       room.currentQuestion = 0;
-      sendQuestion(io, roomCode);
+      io.to(roomCode).emit("quiz-started", { roomCode });
     });
 
     socket.on("submit-answer", (data) => {
@@ -275,20 +279,37 @@ module.exports = function (io) {
       socket.emit("singleplayer-started", { roomCode: code });
     });
 
-    socket.on("set-singleplayer-room", (data) => {
-      const { roomCode } = data;
-      const room = rooms[roomCode];
-      if (!room || room.host !== socket.id) return;
-      sendQuestion(io, roomCode);
-    });
-
-    socket.on("request-question", (data) => {
+    socket.on("request-question", async (data) => {
       const { roomCode } = data;
       const room = rooms[roomCode];
       if (!room) return;
       const player = room.players.find((p) => p.socketId === socket.id);
       if (!player) return;
-      sendQuestion(io, roomCode);
+
+      let quiz;
+      if (room.fullQuestions) {
+        quiz = room.fullQuestions[room.currentQuestion];
+      } else {
+        try {
+          const doc = await Quiz.findById(room.questions[room.currentQuestion]);
+          quiz = doc ? doc.toObject() : null;
+        } catch {
+          quiz = null;
+        }
+      }
+
+      if (!quiz) return;
+
+      socket.emit("new-question", {
+        question: {
+          question: quiz.question,
+          options: quiz.options,
+          explanation: quiz.explanation || "",
+        },
+        questionIndex: room.currentQuestion,
+        totalQuestions: room.questions.length,
+        timePerQuestion: room.settings.timer,
+      });
     });
 
     socket.on("disconnect", () => {

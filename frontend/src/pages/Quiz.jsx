@@ -111,6 +111,13 @@ export default function Quiz() {
       useGameStore.getState().eliminateOptions(data.options);
     };
 
+    const handleRoomError = (msg) => {
+      setToast(msg);
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
+    };
+
     socket.on("new-question", handleNewQuestion);
     socket.on("answer-result", handleAnswerResult);
     socket.on("opponent-answered", handleOpponentAnswer);
@@ -119,6 +126,7 @@ export default function Quiz() {
     socket.on("quiz-ended", handleQuizEnded);
     socket.on("powerup-used", handlePowerupUsed);
     socket.on("eliminated-options", handleEliminatedOptions);
+    socket.on("room-error", handleRoomError);
 
     return () => {
       socket.off("new-question", handleNewQuestion);
@@ -129,6 +137,7 @@ export default function Quiz() {
       socket.off("quiz-ended", handleQuizEnded);
       socket.off("powerup-used", handlePowerupUsed);
       socket.off("eliminated-options", handleEliminatedOptions);
+      socket.off("room-error", handleRoomError);
     };
   }, [navigate, username, roomCode]);
 
@@ -325,9 +334,15 @@ export default function Quiz() {
 
         {game.showResult && (
           <div style={{ marginTop: 16 }}>
-            <button className="btn-primary" onClick={handleNextQuestion}>
-              {game.questionIndex + 1 < game.totalQuestions ? "Next Question →" : "See Results 🏆"}
-            </button>
+            {isHost ? (
+              <button className="btn-primary" onClick={handleNextQuestion}>
+                {game.questionIndex + 1 < game.totalQuestions ? "Next Question →" : "See Results 🏆"}
+              </button>
+            ) : (
+              <p style={{ textAlign: "center", color: "var(--text-secondary)", fontSize: 14 }}>
+                Waiting for host to continue...
+              </p>
+            )}
           </div>
         )}
 

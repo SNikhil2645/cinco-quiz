@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import useUserStore from "../store/userStore";
+import useGameStore from "../store/gameStore";
 import socket from "../socket/service";
 
 const TOPICS = [
@@ -13,6 +14,7 @@ const TOPICS = [
 export default function CreateRoom() {
   const navigate = useNavigate();
   const { setUsername, setIsHost, setRoomCode } = useUserStore();
+  const { setPlayers } = useGameStore();
   const [hostName, setHostName] = useState("");
   const [settings, setSettings] = useState({
     topic: "Mixed (All Topics)",
@@ -23,9 +25,10 @@ export default function CreateRoom() {
   });
 
   useEffect(() => {
-    const handleRoomCreated = (code) => {
-      setRoomCode(code);
+    const handleRoomCreated = (data) => {
+      setRoomCode(data.roomCode);
       setIsHost(true);
+      setPlayers(data.players);
       navigate("/host-lobby");
     };
     socket.on("room-created", handleRoomCreated);

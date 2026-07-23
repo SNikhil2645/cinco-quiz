@@ -2,17 +2,20 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import useUserStore from "../store/userStore";
+import useGameStore from "../store/gameStore";
 import socket from "../socket/service";
 
 export default function JoinRoom() {
   const navigate = useNavigate();
   const { setUsername, setRoomCode, setIsHost } = useUserStore();
+  const { setPlayers } = useGameStore();
   const [username, setUsernameLocal] = useState("");
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const handlePlayerJoined = () => {
+    const handlePlayerJoined = (data) => {
+      setPlayers(data.players);
       setIsHost(false);
       navigate("/player-lobby");
     };

@@ -8,8 +8,8 @@ import socket from "../socket/service";
 export default function PlayerLobby() {
   const navigate = useNavigate();
   const { roomCode, username } = useUserStore();
-  const { setPlayers, resetGame } = useGameStore();
-  const [players, setPlayersLocal] = useState([]);
+  const { setPlayers, resetGame, players: storePlayers } = useGameStore();
+  const [players, setPlayersLocal] = useState(storePlayers);
 
   useEffect(() => {
     resetGame();
@@ -21,13 +21,7 @@ export default function PlayerLobby() {
       setPlayers(data.players);
     };
 
-    const handleQuizStarted = (data) => {
-      useGameStore.getState().setQuestion(
-        data.question,
-        data.questionIndex,
-        data.totalQuestions
-      );
-      useGameStore.getState().timeLeft = data.timePerQuestion;
+    const handleQuizStarted = () => {
       navigate("/quiz");
     };
 
