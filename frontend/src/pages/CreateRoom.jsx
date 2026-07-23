@@ -1,0 +1,112 @@
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import useUserStore from "../store/userStore";
+import socket from "../socket/service";
+
+const TOPICS = [
+  "DSA", "Operating Systems", "DBMS", "Computer Networks",
+  "OOP", "Python", "Java", "Web Dev", "SQL", "Compiler Design",
+  "Mixed (All Topics)"
+];
+
+export default function CreateRoom() {
+  const navigate = useNavigate();
+  const { setUsername, setIsHost, setRoomCode } = useUserStore();
+  const [hostName, setHostName] = useState("");
+  const [settings, setSettings] = useState({
+    topic: "Mixed (All Topics)",
+    difficulty: "Easy",
+    questionCount: 5,
+    timer: 15,
+    powerupsEnabled: true,
+  });
+
+  useEffect(() => {
+    const handleRoomCreated = (code) => {
+      setRoomCode(code);
+      setIsHost(true);
+      navigate("/host-lobby");
+    };
+    socket.on("room-created", handleRoomCreated);
+    return () => socket.off("room-created", handleRoomCreated);
+  }, [navigate]);
+
+  const handleCreate = () => {
+    if (!hostName.trim()) return;
+    setUsername(hostName.trim());
+    socket.emit("create-room", {
+      hostName: hostName.trim(),
+      settings,
+    });
+  };
+
+  return (
+    <div className="screen">
+      <motion.div
+        className="glass-card"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
+        <h1>🏠 Create Room</h1>
+        <p>Set up your quiz room as host</p>
+
+        <label>Your Name (Host)</label>
+        <input
+          type="text"
+          placeholder="Enter host name"
+          value={hostName}
+          onChange={(e) => setHostName(e.target.value)}
+        />
+
+        <label>Topic</label>
+        <select value={settings.topic} onChange={(e) => setSettings({ ...settings, topic: e.target.value })}>
+          {TOPICS.map((t) => (
+            <option key={t} value={t}>{t}</option>
+          ))}
+        </select>
+
+        <label>Difficulty</label>
+        <select value={settings.difficulty} onChange={(e) => setSettings({ ...settings, difficulty: e.target.value })}>
+          <option>Easy</option>
+          <option>Medium</option>
+          <option>Hard</option>
+        </select>
+
+        <label>Number of Questions</label>
+        <select value={settings.questionCount} onChange={(e) => setSettings({ ...settings, questionCount: parseInt(e.target.value) })}>
+          <option value={5}>5</option>
+          <option value={10}>10</option>
+          <option value={15}>15</option>
+          <option value={20}>20</option>
+        </select>
+
+        <label>Timer Per Question (seconds)</label>
+        <select value={settings.timer} onChange={(e) => setSettings({ ...settings, timer: parseInt(e.target.value) })}>
+          <option value={10}>10</option>
+          <option value={15}>15</option>
+          <option value={20}>20</option>
+          <option value={30}>30</option>
+        </select>
+
+        <label style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 16, cursor: "pointer" }}>
+          <input
+            type="checkbox"
+            checked={settings.powerupsEnabled}
+            onChange={(e) => setSettings({ ...settings, powerupsEnabled: e.target.checked })}
+            style={{ width: "auto", marginTop: 0 }}
+          />
+          Enable Power-ups (50-50, Double Points, Freeze Timer)
+        </label>
+
+        <button className="btn-primary" onClick={handleCreate} style={{ marginTop: 20 }}>
+          Create Room 🚀
+        </button>
+
+        <button onClick={() => navigate("/mode")} style={{ marginTop: 8, opacity: 0.6 }}>
+          ← Back
+        </button>
+      </motion.div>
+    </div>
+  );
+}
