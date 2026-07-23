@@ -12,7 +12,7 @@ const TOPICS = [
 
 export default function SinglePlayerSetup() {
   const navigate = useNavigate();
-  const { setUsername } = useUserStore();
+  const { setUsername, setIsHost, setRoomCode } = useUserStore();
   const { resetGame } = useGameStore();
   const [form, setForm] = useState({
     username: "",
@@ -40,7 +40,8 @@ export default function SinglePlayerSetup() {
 
   useEffect(() => {
     const handleSingleplayerStarted = (data) => {
-      socket.emit("set-singleplayer-room", { roomCode: data.roomCode });
+      setIsHost(true);
+      setRoomCode(data.roomCode);
       navigate("/quiz");
     };
     socket.on("singleplayer-started", handleSingleplayerStarted);

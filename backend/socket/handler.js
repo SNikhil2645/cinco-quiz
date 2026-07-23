@@ -282,6 +282,15 @@ module.exports = function (io) {
       sendQuestion(io, roomCode);
     });
 
+    socket.on("request-question", (data) => {
+      const { roomCode } = data;
+      const room = rooms[roomCode];
+      if (!room) return;
+      const player = room.players.find((p) => p.socketId === socket.id);
+      if (!player) return;
+      sendQuestion(io, roomCode);
+    });
+
     socket.on("disconnect", () => {
       console.log("User disconnected:", socket.id);
       for (const code in rooms) {

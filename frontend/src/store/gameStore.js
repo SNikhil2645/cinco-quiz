@@ -33,7 +33,6 @@ const useGameStore = create((set) => ({
       isCorrect: false,
       correctAnswer: "",
       eliminatedOptions: [],
-      timeLeft: total > 0 ? undefined : 15,
     }),
   setTimeLeft: (timeLeft) => set({ timeLeft }),
   setSelectedAnswer: (selectedAnswer) => set({ selectedAnswer }),
