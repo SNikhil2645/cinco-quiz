@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
 
-const BACKEND_URL = "https://cincoquiz.onrender.com";
+const BACKEND_URL = "https://cinco-quiz-backend2.onrender.com";
 
 const socket = io(BACKEND_URL, {
   autoConnect: true,
