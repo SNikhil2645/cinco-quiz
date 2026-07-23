@@ -50,6 +50,21 @@ app.get("/", (req, res) => {
 app.use("/api/quiz", quizRoutes);
 app.use("/api/results", resultRoutes);
 
+app.post("/api/seed", async (req, res) => {
+  const { key } = req.body || {};
+  if (key !== "cinco-seed-2026") return res.status(403).json({ error: "Forbidden" });
+  try {
+    const Quiz = require("./models/Quiz");
+    const questions = require("./seed/questions");
+    const existing = await Quiz.countDocuments();
+    if (existing > 0) return res.json({ message: `Already seeded (${existing} questions)` });
+    const result = await Quiz.insertMany(questions);
+    res.json({ message: `Seeded ${result.length} questions`, count: result.length });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 socketHandler(io);
 
 const PORT = process.env.PORT || 5000;
