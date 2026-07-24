@@ -21,16 +21,22 @@ function shuffleArray(arr) {
   return a;
 }
 
-function calculateScore(isCorrect, timeTaken, timeLimit, streak, doubleActive) {
+function calculateScore(isCorrect, timeTaken, timeLimit, streak, doubleActive, correctCount, totalAnswered) {
   if (!isCorrect) return { scoreGain: 0, newStreak: 0, newMultiplier: 1 };
-  let base = 100;
-  const speedRatio = 1 - timeTaken / timeLimit;
-  if (speedRatio > 0.5) base += 50;
-  else if (speedRatio > 0.25) base += 20;
+
+  const speedRatio = Math.max(0, 1 - timeTaken / timeLimit);
+  const speedBonus = Math.round(speedRatio * 50);
+
+  const accuracyRatio = totalAnswered > 0 ? correctCount / totalAnswered : 0;
+  const accuracyBonus = Math.round(accuracyRatio * 50);
+
+  const base = 100 + speedBonus + accuracyBonus;
+
   const newStreak = streak + 1;
   let multiplier = 1;
   if (newStreak >= 3) multiplier = 3;
   else if (newStreak >= 2) multiplier = 2;
+
   let scoreGain = base * multiplier;
   if (doubleActive) scoreGain *= 2;
   return { scoreGain, newStreak, newMultiplier: multiplier };
@@ -223,10 +229,12 @@ module.exports = function (io) {
       if (!quiz) return;
 
       const isCorrect = answer === quiz.correct;
+      const totalAnswered = player.answers.filter((a) => a !== null).length;
       if (isCorrect) player.correctCount++;
 
       const { scoreGain, newStreak, newMultiplier } = calculateScore(
-        isCorrect, timeTaken, room.settings.timer, player.streak, player.doublePointsActive
+        isCorrect, timeTaken, room.settings.timer, player.streak, player.doublePointsActive,
+        player.correctCount, totalAnswered
       );
 
       player.score += scoreGain;

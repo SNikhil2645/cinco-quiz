@@ -63,7 +63,7 @@ export default function Quiz() {
     }, 1000);
   };
 
-  const startAutoAdvance = (totalQuestions) => {
+  const startAutoAdvance = () => {
     clearInterval(autoAdvanceRef.current);
     let remaining = 3;
     setCountdown(remaining);
@@ -73,10 +73,7 @@ export default function Quiz() {
       if (remaining <= 0) {
         clearInterval(autoAdvanceRef.current);
         setCountdown(null);
-        const g = gameRef.current;
-        if (g.questionIndex + 1 < g.totalQuestions) {
-          socket.emit("next-question", { roomCode });
-        }
+        socket.emit("next-question", { roomCode });
       }
     }, 1000);
   };
@@ -111,8 +108,7 @@ export default function Quiz() {
         data.newStreak,
         data.newMultiplier
       );
-      const g = gameRef.current;
-      startAutoAdvance(g.totalQuestions);
+      startAutoAdvance();
     };
 
     const handleOpponentAnswer = (data) => {
