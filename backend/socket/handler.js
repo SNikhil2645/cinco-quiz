@@ -38,6 +38,7 @@ function calculateScore(isCorrect, timeTaken, timeLimit, streak, doubleActive) {
 
 function getLeaderboard(room) {
   return room.players
+    .filter((p) => !p.isSpectating)
     .map((p) => {
       const totalAnswered = p.answers.filter((a) => a !== null).length;
       const accuracy = totalAnswered > 0 ? Math.round((p.correctCount / totalAnswered) * 100) : 0;
@@ -49,10 +50,49 @@ function getLeaderboard(room) {
         totalTime,
         streakMax: p.maxStreak,
         correctCount: p.correctCount,
-        totalQuestions: p.answers.length,
+        totalQuestions: room.questions.length,
       };
     })
     .sort((a, b) => b.score - a.score);
+}
+
+function getRoomPlayers(room) {
+  return room.players.map((p) => ({
+    username: p.username,
+    isHost: p.socketId === room.host,
+    isSpectating: p.isSpectating || false,
+  }));
+}
+
+function checkQuizEnd(io, roomCode) {
+  const room = rooms[roomCode];
+  if (!room || room.status === "finished") return;
+
+  const activePlayers = room.players.filter((p) => !p.isSpectating);
+  const allFinished = activePlayers.length > 0 && activePlayers.every((p) => p.finished);
+
+  if (allFinished && !room.quizEnding) {
+    room.quizEnding = true;
+    setTimeout(() => endQuiz(io, roomCode), 2000);
+  }
+}
+
+function sendQuestionToPlayer(io, room, player) {
+  if (player.isSpectating || player.finished) return;
+
+  const quiz = room.fullQuestions ? room.fullQuestions[player.currentQuestion] : null;
+  if (!quiz) return;
+
+  io.to(player.socketId).emit("new-question", {
+    question: {
+      question: quiz.question,
+      options: quiz.options,
+      explanation: quiz.explanation || "",
+    },
+    questionIndex: player.currentQuestion,
+    totalQuestions: room.questions.length,
+    timePerQuestion: room.settings.timer,
+  });
 }
 
 module.exports = function (io) {
@@ -62,14 +102,28 @@ module.exports = function (io) {
     socket.on("create-room", async (data) => {
       const code = generateCode();
       const { hostName, settings } = data;
+      const isSpectating = !!settings.isSpectating;
 
       rooms[code] = {
         host: socket.id,
         hostName,
-        players: [{ socketId: socket.id, username: hostName, score: 0, streak: 0, maxStreak: 0, answers: [], answerTimes: [], correctCount: 0, powerups: { fiftyFifty: true, doublePoints: true, freezeTimer: true }, doublePointsActive: false }],
+        players: [{
+          socketId: socket.id,
+          username: hostName,
+          score: 0,
+          streak: 0,
+          maxStreak: 0,
+          answers: [],
+          answerTimes: [],
+          correctCount: 0,
+          powerups: { fiftyFifty: true, doublePoints: true, freezeTimer: true },
+          doublePointsActive: false,
+          currentQuestion: 0,
+          finished: false,
+          isSpectating,
+        }],
         settings,
         questions: [],
-        currentQuestion: 0,
         status: "waiting",
       };
 
@@ -89,7 +143,7 @@ module.exports = function (io) {
       socket.join(code);
       socket.emit("room-created", {
         roomCode: code,
-        players: rooms[code].players.map((p) => ({ username: p.username, isHost: p.socketId === rooms[code].host })),
+        players: getRoomPlayers(rooms[code]),
       });
 
       console.log("Room created:", code);
@@ -126,12 +180,15 @@ module.exports = function (io) {
         correctCount: 0,
         powerups: { fiftyFifty: true, doublePoints: true, freezeTimer: true },
         doublePointsActive: false,
+        currentQuestion: 0,
+        finished: false,
+        isSpectating: false,
       });
 
       socket.join(roomCode);
       io.to(roomCode).emit("player-joined", {
         roomCode,
-        players: room.players.map((p) => ({ username: p.username, isHost: p.socketId === room.host })),
+        players: getRoomPlayers(room),
       });
       console.log(`${username} joined room ${roomCode}`);
     });
@@ -140,11 +197,14 @@ module.exports = function (io) {
       const { roomCode } = data;
       const room = rooms[roomCode];
       if (!room || room.host !== socket.id) return;
-      if (room.players.length < 1) return;
+
+      const activePlayers = room.players.filter((p) => !p.isSpectating);
+      if (activePlayers.length < 1) return;
 
       room.status = "active";
-      room.currentQuestion = 0;
-      io.to(roomCode).emit("quiz-started", { roomCode });
+      const hostPlayer = room.players.find((p) => p.socketId === room.host);
+      const hostSpectating = hostPlayer?.isSpectating || false;
+      io.to(roomCode).emit("quiz-started", { roomCode, isSpectating: hostSpectating });
     });
 
     socket.on("submit-answer", (data) => {
@@ -153,7 +213,7 @@ module.exports = function (io) {
       if (!room) return;
 
       const player = room.players.find((p) => p.socketId === socket.id);
-      if (!player) return;
+      if (!player || player.isSpectating) return;
       if (player.answers[questionIndex] !== undefined) return;
 
       player.answers[questionIndex] = answer;
@@ -187,29 +247,30 @@ module.exports = function (io) {
         questionIndex,
       });
 
-      const allAnswered = room.players.every((p) => p.answers[questionIndex] !== undefined);
-      if (allAnswered) {
-        const leaderboard = getLeaderboard(room);
-        io.to(roomCode).emit("leaderboard-update", { leaderboard });
-
-        if (room.currentQuestion + 1 >= room.questions.length && !room.quizEnding) {
-          room.quizEnding = true;
-          setTimeout(() => endQuiz(io, roomCode), 2000);
-        }
-      }
+      const leaderboard = getLeaderboard(room);
+      io.to(roomCode).emit("leaderboard-update", { leaderboard });
     });
 
     socket.on("next-question", (data) => {
       const { roomCode } = data;
       const room = rooms[roomCode];
-      if (!room || room.host !== socket.id) return;
-      if (room.status === "finished") return;
+      if (!room || room.status !== "active") return;
 
-      room.currentQuestion++;
-      if (room.currentQuestion >= room.questions.length) {
-        endQuiz(io, roomCode);
+      const player = room.players.find((p) => p.socketId === socket.id);
+      if (!player || player.isSpectating) return;
+
+      if (player.currentQuestion + 1 >= room.questions.length) {
+        player.finished = true;
+        socket.emit("player-finished", {
+          questionIndex: player.currentQuestion,
+          totalQuestions: room.questions.length,
+        });
+        const leaderboard = getLeaderboard(room);
+        io.to(roomCode).emit("leaderboard-update", { leaderboard });
+        checkQuizEnd(io, roomCode);
       } else {
-        sendQuestion(io, roomCode);
+        player.currentQuestion++;
+        sendQuestionToPlayer(io, room, player);
       }
     });
 
@@ -219,7 +280,7 @@ module.exports = function (io) {
       if (!room || !room.settings.powerupsEnabled) return;
 
       const player = room.players.find((p) => p.socketId === socket.id);
-      if (!player) return;
+      if (!player || player.isSpectating) return;
       if (!player.powerups[type]) return;
 
       player.powerups[type] = false;
@@ -270,11 +331,13 @@ module.exports = function (io) {
           correctCount: 0,
           powerups: { fiftyFifty: true, doublePoints: true, freezeTimer: true },
           doublePointsActive: false,
+          currentQuestion: 0,
+          finished: false,
+          isSpectating: false,
         }],
         settings: { topic, difficulty, questionCount, timer, powerupsEnabled: true },
         questions: questions.map((q) => q._id.toString()),
         fullQuestions: questions,
-        currentQuestion: 0,
         status: "active",
         isSingleplayer: true,
       };
@@ -288,32 +351,9 @@ module.exports = function (io) {
       const room = rooms[roomCode];
       if (!room) return;
       const player = room.players.find((p) => p.socketId === socket.id);
-      if (!player) return;
+      if (!player || player.isSpectating || player.finished) return;
 
-      let quiz;
-      if (room.fullQuestions) {
-        quiz = room.fullQuestions[room.currentQuestion];
-      } else {
-        try {
-          const doc = await Quiz.findById(room.questions[room.currentQuestion]);
-          quiz = doc ? doc.toObject() : null;
-        } catch {
-          quiz = null;
-        }
-      }
-
-      if (!quiz) return;
-
-      socket.emit("new-question", {
-        question: {
-          question: quiz.question,
-          options: quiz.options,
-          explanation: quiz.explanation || "",
-        },
-        questionIndex: room.currentQuestion,
-        totalQuestions: room.questions.length,
-        timePerQuestion: room.settings.timer,
-      });
+      sendQuestionToPlayer(io, room, player);
     });
 
     socket.on("disconnect", () => {
@@ -325,22 +365,27 @@ module.exports = function (io) {
         if (idx === -1) continue;
 
         if (room.host === socket.id) {
-          if (room.status === "active" && room.players.length > 1) {
-            const leaderboard = getLeaderboard(room);
-            try {
-              Result.create({
-                roomCode: code,
-                players: leaderboard,
-                settings: {
-                  topic: room.settings.topic,
-                  difficulty: room.settings.difficulty,
-                  questionCount: room.settings.questionCount,
-                },
-              });
-            } catch (err) {
-              console.error("Error saving partial results:", err.message);
+          if (room.status === "active") {
+            const activePlayers = room.players.filter((p) => !p.isSpectating);
+            if (activePlayers.length > 1 || (activePlayers.length === 1 && activePlayers[0].answers.length > 0)) {
+              const leaderboard = getLeaderboard(room);
+              try {
+                Result.create({
+                  roomCode: code,
+                  players: leaderboard,
+                  settings: {
+                    topic: room.settings.topic,
+                    difficulty: room.settings.difficulty,
+                    questionCount: room.settings.questionCount,
+                  },
+                });
+              } catch (err) {
+                console.error("Error saving partial results:", err.message);
+              }
+              io.to(code).emit("quiz-ended", { leaderboard });
+            } else {
+              io.to(code).emit("room-error", "Host disconnected");
             }
-            io.to(code).emit("quiz-ended", { leaderboard });
           } else {
             io.to(code).emit("room-error", "Host disconnected");
           }
@@ -349,8 +394,11 @@ module.exports = function (io) {
           room.players.splice(idx, 1);
           io.to(code).emit("player-joined", {
             roomCode: code,
-            players: room.players.map((p) => ({ username: p.username, isHost: p.socketId === room.host })),
+            players: getRoomPlayers(room),
           });
+          if (room.status === "active") {
+            checkQuizEnd(io, code);
+          }
         }
       }
     });
@@ -373,64 +421,47 @@ module.exports = function (io) {
       }
 
       if (room.status === "active") {
-        const quiz = room.fullQuestions ? room.fullQuestions[room.currentQuestion] : null;
-        socket.emit("rejoined", {
-          roomCode,
-          question: quiz
-            ? { question: quiz.question, options: quiz.options, explanation: quiz.explanation || "" }
-            : null,
-          questionIndex: room.currentQuestion,
-          totalQuestions: room.questions.length,
-          timePerQuestion: room.settings.timer,
-          score: player.score,
-          streak: player.streak,
-          maxStreak: player.maxStreak,
-          powerups: player.powerups,
-          isHost: socket.id === room.host,
-          leaderboard: getLeaderboard(room),
-          players: room.players.map((p) => ({ username: p.username, isHost: p.socketId === room.host })),
-        });
+        if (player.isSpectating) {
+          socket.emit("rejoined", {
+            roomCode,
+            status: "active",
+            isHost: socket.id === room.host,
+            isSpectating: true,
+            players: getRoomPlayers(room),
+            leaderboard: getLeaderboard(room),
+          });
+        } else {
+          const quiz = room.fullQuestions ? room.fullQuestions[player.currentQuestion] : null;
+          socket.emit("rejoined", {
+            roomCode,
+            question: quiz
+              ? { question: quiz.question, options: quiz.options, explanation: quiz.explanation || "" }
+              : null,
+            questionIndex: player.currentQuestion,
+            totalQuestions: room.questions.length,
+            timePerQuestion: room.settings.timer,
+            score: player.score,
+            streak: player.streak,
+            maxStreak: player.maxStreak,
+            powerups: player.powerups,
+            isHost: socket.id === room.host,
+            isSpectating: false,
+            leaderboard: getLeaderboard(room),
+            players: getRoomPlayers(room),
+          });
+        }
       } else {
         socket.emit("rejoined", {
           roomCode,
           status: room.status,
           isHost: socket.id === room.host,
-          players: room.players.map((p) => ({ username: p.username, isHost: p.socketId === room.host })),
+          isSpectating: player.isSpectating,
+          players: getRoomPlayers(room),
         });
       }
     });
   });
 };
-
-async function sendQuestion(io, roomCode) {
-  const room = rooms[roomCode];
-  if (!room) return;
-
-  let quiz;
-  if (room.fullQuestions) {
-    quiz = room.fullQuestions[room.currentQuestion];
-  } else {
-    try {
-      const doc = await Quiz.findById(room.questions[room.currentQuestion]);
-      quiz = doc ? doc.toObject() : null;
-    } catch {
-      quiz = null;
-    }
-  }
-
-  if (!quiz) return;
-
-  io.to(roomCode).emit("new-question", {
-    question: {
-      question: quiz.question,
-      options: quiz.options,
-      explanation: quiz.explanation || "",
-    },
-    questionIndex: room.currentQuestion,
-    totalQuestions: room.questions.length,
-    timePerQuestion: room.settings.timer,
-  });
-}
 
 async function endQuiz(io, roomCode) {
   const room = rooms[roomCode];

@@ -7,7 +7,7 @@ import socket from "../socket/service";
 
 export default function Quiz() {
   const navigate = useNavigate();
-  const { username, isHost, roomCode } = useUserStore();
+  const { username, isHost, roomCode, isSpectating: userIsSpectating } = useUserStore();
   const game = useGameStore();
   const gameRef = useRef(game);
   gameRef.current = game;
@@ -16,7 +16,11 @@ export default function Quiz() {
   const [toast, setToast] = useState(null);
   const [opponentAnswered, setOpponentAnswered] = useState(null);
   const [showLeaderboard, setShowLeaderboard] = useState(false);
+  const [playerFinished, setPlayerFinished] = useState(false);
+  const [isSpectating, setIsSpectating] = useState(false);
+  const [countdown, setCountdown] = useState(null);
   const timerRef = useRef(null);
+  const autoAdvanceRef = useRef(null);
   const timeLeftRef = useRef(15);
   const questionIndexRef = useRef(0);
   const timePerQuestionRef = useRef(15);
@@ -24,6 +28,12 @@ export default function Quiz() {
   useEffect(() => {
     questionIndexRef.current = game.questionIndex;
   }, [game.questionIndex]);
+
+  useEffect(() => {
+    if (userIsSpectating) {
+      setIsSpectating(true);
+    }
+  }, []);
 
   const startTimer = (seconds) => {
     clearInterval(timerRef.current);
@@ -53,13 +63,37 @@ export default function Quiz() {
     }, 1000);
   };
 
+  const startAutoAdvance = (totalQuestions) => {
+    clearInterval(autoAdvanceRef.current);
+    let remaining = 3;
+    setCountdown(remaining);
+    autoAdvanceRef.current = setInterval(() => {
+      remaining--;
+      setCountdown(remaining);
+      if (remaining <= 0) {
+        clearInterval(autoAdvanceRef.current);
+        setCountdown(null);
+        const g = gameRef.current;
+        if (g.questionIndex + 1 < g.totalQuestions) {
+          socket.emit("next-question", { roomCode });
+        }
+      }
+    }, 1000);
+  };
+
   useEffect(() => {
-    return () => clearInterval(timerRef.current);
+    return () => {
+      clearInterval(timerRef.current);
+      clearInterval(autoAdvanceRef.current);
+    };
   }, []);
 
   useEffect(() => {
     const handleNewQuestion = (data) => {
       setShowLeaderboard(false);
+      setPlayerFinished(false);
+      setCountdown(null);
+      clearInterval(autoAdvanceRef.current);
       useGameStore.getState().setQuestion(
         data.question,
         data.questionIndex,
@@ -77,6 +111,8 @@ export default function Quiz() {
         data.newStreak,
         data.newMultiplier
       );
+      const g = gameRef.current;
+      startAutoAdvance(g.totalQuestions);
     };
 
     const handleOpponentAnswer = (data) => {
@@ -93,6 +129,8 @@ export default function Quiz() {
 
     const handleQuizEnded = (data) => {
       clearInterval(timerRef.current);
+      clearInterval(autoAdvanceRef.current);
+      setCountdown(null);
       useGameStore.getState().setLeaderboard(data.leaderboard);
       navigate("/results");
     };
@@ -135,6 +173,12 @@ export default function Quiz() {
       }, 1000);
     };
 
+    const handlePlayerFinished = () => {
+      setPlayerFinished(true);
+      clearInterval(autoAdvanceRef.current);
+      setCountdown(null);
+    };
+
     const handleRoomError = (msg) => {
       setToast(msg);
       setTimeout(() => {
@@ -155,6 +199,20 @@ export default function Quiz() {
       }
       useUserStore.getState().setRoomCode(data.roomCode);
       useUserStore.getState().setIsHost(data.isHost);
+
+      if (data.isSpectating) {
+        setIsSpectating(true);
+        if (data.leaderboard) {
+          useGameStore.getState().setLeaderboard(data.leaderboard);
+        }
+        if (data.players) {
+          useGameStore.getState().setPlayers(data.players);
+        }
+        setToast("Reconnected as spectator!");
+        setTimeout(() => setToast(null), 2000);
+        return;
+      }
+
       if (data.question) {
         useGameStore.getState().setQuestion(
           data.question,
@@ -162,8 +220,6 @@ export default function Quiz() {
           data.totalQuestions
         );
         useGameStore.getState().setAnswerSubmitted(false);
-        useGameStore.getState().showResult = false;
-        const s = useGameStore.getState();
         useGameStore.setState({
           score: data.score,
           streak: data.streak,
@@ -188,6 +244,7 @@ export default function Quiz() {
     socket.on("powerup-used", handlePowerupUsed);
     socket.on("eliminated-options", handleEliminatedOptions);
     socket.on("timer-update", handleTimerUpdate);
+    socket.on("player-finished", handlePlayerFinished);
     socket.on("rejoined", handleRejoined);
     socket.on("room-error", handleRoomError);
 
@@ -200,6 +257,7 @@ export default function Quiz() {
       socket.off("powerup-used", handlePowerupUsed);
       socket.off("eliminated-options", handleEliminatedOptions);
       socket.off("timer-update", handleTimerUpdate);
+      socket.off("player-finished", handlePlayerFinished);
       socket.off("rejoined", handleRejoined);
       socket.off("room-error", handleRoomError);
     };
@@ -223,10 +281,6 @@ export default function Quiz() {
     });
   };
 
-  const handleNextQuestion = () => {
-    socket.emit("next-question", { roomCode });
-  };
-
   const handlePowerup = (type) => {
     if (!game.powerups[type]) return;
     if (type === "fiftyFifty") {
@@ -242,6 +296,49 @@ export default function Quiz() {
     }
     useGameStore.getState().usePowerup(type);
   };
+
+  if (isSpectating) {
+    return (
+      <div className="screen">
+        <div className="glass-card" style={{ maxWidth: 600 }}>
+          <AnimatePresence>
+            {toast && (
+              <motion.div
+                className="toast"
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+              >
+                {toast}
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <h2>👁️ Spectating</h2>
+          <p style={{ marginBottom: 12 }}>You are watching this quiz</p>
+
+          <AnimatePresence>
+            {showLeaderboard && game.leaderboard.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+              >
+                <h3>📊 Live Standings</h3>
+                {game.leaderboard.map((p, i) => (
+                  <div className={`leaderboard-row rank-${i + 1}`} key={i}>
+                    <span className="leaderboard-rank">{i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i + 1}`}</span>
+                    <span className="leaderboard-name">{p.username}</span>
+                    <span className="leaderboard-score">{p.score}</span>
+                  </div>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+    );
+  }
 
   if (!game.currentQuestion) {
     return (
@@ -290,75 +387,102 @@ export default function Quiz() {
           </motion.div>
         )}
 
-        <div className={`timer-display ${timeLeft <= 5 ? "timer-warning" : ""}`}>
-          ⏱️ {timeLeft}s
-        </div>
+        {!playerFinished && (
+          <>
+            <div className={`timer-display ${timeLeft <= 5 ? "timer-warning" : ""}`}>
+              ⏱️ {timeLeft}s
+            </div>
 
-        <motion.h2
-          key={game.questionIndex}
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          style={{ fontSize: 20, marginBottom: 16, lineHeight: 1.4 }}
-        >
-          {game.currentQuestion.question}
-        </motion.h2>
+            <motion.h2
+              key={game.questionIndex}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              style={{ fontSize: 20, marginBottom: 16, lineHeight: 1.4 }}
+            >
+              {game.currentQuestion.question}
+            </motion.h2>
 
-        {!game.showResult && (
-          <div className="powerups-bar">
-            <button
-              className={`powerup-btn ${!game.powerups.fiftyFifty ? "disabled" : ""}`}
-              onClick={() => handlePowerup("fiftyFifty")}
-              disabled={!game.powerups.fiftyFifty || game.answerSubmitted}
-              title="50-50: Remove 2 wrong answers"
-            >
-              🎯
-            </button>
-            <button
-              className={`powerup-btn ${!game.powerups.doublePoints ? "disabled" : ""}`}
-              onClick={() => handlePowerup("doublePoints")}
-              disabled={!game.powerups.doublePoints || game.answerSubmitted}
-              title="Double Points: 2x on next correct answer"
-            >
-              ⚡
-            </button>
-            <button
-              className={`powerup-btn ${!game.powerups.freezeTimer ? "disabled" : ""}`}
-              onClick={() => handlePowerup("freezeTimer")}
-              disabled={!game.powerups.freezeTimer || game.answerSubmitted}
-              title="Freeze Timer: +10 seconds"
-            >
-              ❄️
-            </button>
-          </div>
+            {!game.showResult && (
+              <div className="powerups-bar">
+                <button
+                  className={`powerup-btn ${!game.powerups.fiftyFifty ? "disabled" : ""}`}
+                  onClick={() => handlePowerup("fiftyFifty")}
+                  disabled={!game.powerups.fiftyFifty || game.answerSubmitted}
+                  title="50-50: Remove 2 wrong answers"
+                >
+                  🎯
+                </button>
+                <button
+                  className={`powerup-btn ${!game.powerups.doublePoints ? "disabled" : ""}`}
+                  onClick={() => handlePowerup("doublePoints")}
+                  disabled={!game.powerups.doublePoints || game.answerSubmitted}
+                  title="Double Points: 2x on next correct answer"
+                >
+                  ⚡
+                </button>
+                <button
+                  className={`powerup-btn ${!game.powerups.freezeTimer ? "disabled" : ""}`}
+                  onClick={() => handlePowerup("freezeTimer")}
+                  disabled={!game.powerups.freezeTimer || game.answerSubmitted}
+                  title="Freeze Timer: +10 seconds"
+                >
+                  ❄️
+                </button>
+              </div>
+            )}
+
+            <div className="answers-grid">
+              {game.currentQuestion.options.map((option, i) => {
+                let className = "answer-btn";
+                if (game.eliminatedOptions.includes(option)) className += " eliminated";
+                else if (game.showResult && option === game.correctAnswer) className += " correct";
+                else if (game.showResult && option === game.selectedAnswer && !game.isCorrect) className += " wrong";
+                else if (option === game.selectedAnswer) className += " selected";
+
+                return (
+                  <motion.button
+                    key={`${game.questionIndex}-${i}`}
+                    className={className}
+                    onClick={() => handleAnswer(option)}
+                    disabled={game.answerSubmitted || game.showResult || game.eliminatedOptions.includes(option)}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.08 }}
+                  >
+                    <span style={{ opacity: 0.5, marginRight: 10 }}>{String.fromCharCode(65 + i)}</span>
+                    {option}
+                  </motion.button>
+                );
+              })}
+            </div>
+          </>
         )}
 
-        <div className="answers-grid">
-          {game.currentQuestion.options.map((option, i) => {
-            let className = "answer-btn";
-            if (game.eliminatedOptions.includes(option)) className += " eliminated";
-            else if (game.showResult && option === game.correctAnswer) className += " correct";
-            else if (game.showResult && option === game.selectedAnswer && !game.isCorrect) className += " wrong";
-            else if (option === game.selectedAnswer) className += " selected";
-
-            return (
-              <motion.button
-                key={`${game.questionIndex}-${i}`}
-                className={className}
-                onClick={() => handleAnswer(option)}
-                disabled={game.answerSubmitted || game.showResult || game.eliminatedOptions.includes(option)}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.08 }}
-              >
-                <span style={{ opacity: 0.5, marginRight: 10 }}>{String.fromCharCode(65 + i)}</span>
-                {option}
-              </motion.button>
-            );
-          })}
-        </div>
+        <AnimatePresence>
+          {playerFinished && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              style={{
+                padding: 20,
+                borderRadius: 14,
+                background: "rgba(0, 245, 255, 0.1)",
+                border: "1px solid var(--accent-cyan)",
+                margin: "16px 0",
+              }}
+            >
+              <p style={{ fontSize: 18, fontWeight: 700, margin: 0, color: "var(--accent-cyan)" }}>
+                ✅ You finished all questions!
+              </p>
+              <p style={{ fontSize: 14, margin: "8px 0 0 0", color: "var(--text-secondary)" }}>
+                Waiting for other players to finish...
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <AnimatePresence>
-          {game.showResult && (
+          {game.showResult && !playerFinished && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -396,19 +520,18 @@ export default function Quiz() {
           )}
         </AnimatePresence>
 
-        {game.showResult && (
-          <div style={{ marginTop: 16 }}>
-            {isHost ? (
-              <button className="btn-primary" onClick={handleNextQuestion}>
-                {game.questionIndex + 1 < game.totalQuestions ? "Next Question →" : "See Results 🏆"}
-              </button>
-            ) : (
-              <p style={{ textAlign: "center", color: "var(--text-secondary)", fontSize: 14 }}>
-                Waiting for host to continue...
-              </p>
-            )}
-          </div>
-        )}
+        <AnimatePresence>
+          {countdown !== null && countdown > 0 && game.showResult && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              style={{ marginTop: 12, fontSize: 14, color: "var(--text-secondary)" }}
+            >
+              Next question in {countdown}s...
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <AnimatePresence>
           {showLeaderboard && game.leaderboard.length > 0 && (

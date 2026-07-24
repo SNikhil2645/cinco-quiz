@@ -22,6 +22,7 @@ export default function CreateRoom() {
     questionCount: 5,
     timer: 15,
     powerupsEnabled: true,
+    isSpectating: false,
   });
 
   useEffect(() => {
@@ -29,7 +30,7 @@ export default function CreateRoom() {
       setRoomCode(data.roomCode);
       setIsHost(true);
       setPlayers(data.players);
-      localStorage.setItem("cincoquiz-session", JSON.stringify({ roomCode: data.roomCode, username: hostName.trim(), isHost: true }));
+      localStorage.setItem("cincoquiz-session", JSON.stringify({ roomCode: data.roomCode, username: hostName.trim(), isHost: true, isSpectating: settings.isSpectating }));
       navigate("/host-lobby");
     };
     socket.on("room-created", handleRoomCreated);
@@ -101,6 +102,16 @@ export default function CreateRoom() {
             style={{ width: "auto", marginTop: 0 }}
           />
           Enable Power-ups (50-50, Double Points, Freeze Timer)
+        </label>
+
+        <label style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 12, cursor: "pointer" }}>
+          <input
+            type="checkbox"
+            checked={settings.isSpectating}
+            onChange={(e) => setSettings({ ...settings, isSpectating: e.target.checked })}
+            style={{ width: "auto", marginTop: 0 }}
+          />
+          Spectate Mode (host only watches, doesn't play)
         </label>
 
         <button className="btn-primary" onClick={handleCreate} style={{ marginTop: 20 }}>

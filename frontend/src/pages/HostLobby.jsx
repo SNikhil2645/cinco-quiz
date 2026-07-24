@@ -7,7 +7,7 @@ import socket from "../socket/service";
 
 export default function HostLobby() {
   const navigate = useNavigate();
-  const { username, roomCode, setRoomCode } = useUserStore();
+  const { username, roomCode, setRoomCode, setIsSpectating } = useUserStore();
   const { setPlayers, resetGame, players: storePlayers } = useGameStore();
   const [players, setPlayersLocal] = useState(storePlayers);
   const [copied, setCopied] = useState(false);
@@ -22,11 +22,17 @@ export default function HostLobby() {
       setPlayers(data.players);
     };
 
-    const handleQuizStarted = () => {
+    const handleQuizStarted = (data) => {
+      if (data?.isSpectating) {
+        setIsSpectating(true);
+      }
       navigate("/quiz");
     };
 
     const handleRejoined = (data) => {
+      if (data.isSpectating) {
+        setIsSpectating(true);
+      }
       if (data.status === "active") {
         navigate("/quiz");
         return;
@@ -49,7 +55,6 @@ export default function HostLobby() {
   }, [navigate]);
 
   const handleStartQuiz = () => {
-    if (players.length < 1) return;
     socket.emit("start-quiz", { roomCode });
   };
 
@@ -58,6 +63,10 @@ export default function HostLobby() {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+
+  const hostPlayer = players.find((p) => p.isHost);
+  const isSpectating = hostPlayer?.isSpectating || false;
+  const activePlayers = players.filter((p) => !p.isSpectating);
 
   return (
     <div className="screen">
@@ -68,6 +77,21 @@ export default function HostLobby() {
       >
         <h1>🏠 Host Lobby</h1>
         <p>Share this code with players to join</p>
+
+        {isSpectating && (
+          <div style={{
+            padding: "8px 16px",
+            borderRadius: 10,
+            background: "rgba(138, 43, 226, 0.2)",
+            border: "1px solid rgba(138, 43, 226, 0.4)",
+            fontSize: 13,
+            fontWeight: 600,
+            marginBottom: 12,
+            color: "var(--accent-purple)",
+          }}>
+            👁️ Spectate Mode — You will watch, not play
+          </div>
+        )}
 
         <div
           className="room-code-display"
@@ -83,14 +107,15 @@ export default function HostLobby() {
         </p>
 
         <div style={{ display: "flex", justifyContent: "space-between", marginTop: 16 }}>
-          <h3 style={{ margin: 0 }}>Players ({players.length})</h3>
+          <h3 style={{ margin: 0 }}>Players ({activePlayers.length} playing{isSpectating ? ", 1 spectating" : ""})</h3>
         </div>
 
         <div style={{ marginTop: 12 }}>
           {players.map((p, i) => (
             <div className="player-item" key={i}>
-              <span>{i === 0 ? "👑" : "👤"} {p.username}</span>
-              {i === 0 && <span className="host-badge">HOST</span>}
+              <span>{p.isHost ? "👑 " : "👤 "}{p.username}</span>
+              {p.isHost && p.isSpectating && <span style={{ fontSize: 11, color: "var(--accent-purple)" }}>👁️ SPECTATING</span>}
+              {p.isHost && !p.isSpectating && <span className="host-badge">HOST</span>}
             </div>
           ))}
           {players.length === 0 && (
@@ -100,8 +125,8 @@ export default function HostLobby() {
           )}
         </div>
 
-        <button className="btn-primary" onClick={handleStartQuiz} disabled={players.length < 1} style={{ marginTop: 20 }}>
-          Start Quiz ({players.length} player{players.length !== 1 ? "s" : ""}) 🎯
+        <button className="btn-primary" onClick={handleStartQuiz} disabled={activePlayers.length < 1} style={{ marginTop: 20 }}>
+          Start Quiz ({activePlayers.length} player{activePlayers.length !== 1 ? "s" : ""}) 🎯
         </button>
 
         <button onClick={() => { localStorage.removeItem("cincoquiz-session"); navigate("/"); }} className="btn-danger" style={{ marginTop: 8 }}>
