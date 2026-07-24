@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Trophy, Zap, Users } from "lucide-react";
+import { Trophy, Zap, Users, Brain } from "lucide-react";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -17,12 +17,23 @@ export default function Home() {
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-          style={{ fontSize: 64, marginBottom: 8 }}
+          style={{ marginBottom: 8, display: "flex", justifyContent: "center" }}
         >
-          🚀
+          <div style={{
+            width: 80,
+            height: 80,
+            borderRadius: 20,
+            background: "linear-gradient(135deg, var(--accent-cyan), var(--accent-purple))",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            boxShadow: "0 4px 24px rgba(0, 245, 255, 0.3)",
+          }}>
+            <Brain size={44} color="#fff" strokeWidth={2} />
+          </div>
         </motion.div>
 
-        <h1>CincoQuiz</h1>
+        <h1 style={{ marginTop: 4 }}>CincoQuiz</h1>
         <p>Real-Time Competitive Quiz Platform for CS Students</p>
 
         <div style={{ display: "flex", gap: 16, margin: "20px 0", justifyContent: "center" }}>
@@ -41,7 +52,7 @@ export default function Home() {
         </div>
 
         <button className="btn-primary" onClick={() => navigate("/mode")} style={{ marginTop: 20 }}>
-          Play Now 🚀
+          Play Now
         </button>
 
         <button onClick={() => navigate("/view-results")} style={{ marginTop: 8 }}>

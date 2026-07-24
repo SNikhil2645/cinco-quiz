@@ -89,7 +89,7 @@ export default function HostLobby() {
             marginBottom: 12,
             color: "var(--accent-purple)",
           }}>
-            👁️ Spectate Mode — You will watch, not play
+            🎥 Spectate Mode — You will watch, not play
           </div>
         )}
 
@@ -114,7 +114,7 @@ export default function HostLobby() {
           {players.map((p, i) => (
             <div className="player-item" key={i}>
               <span>{p.isHost ? "👑 " : "👤 "}{p.username}</span>
-              {p.isHost && p.isSpectating && <span style={{ fontSize: 11, color: "var(--accent-purple)" }}>👁️ SPECTATING</span>}
+              {p.isHost && p.isSpectating && <span style={{ fontSize: 11, color: "var(--accent-purple)" }}>🎥 SPECTATING</span>}
               {p.isHost && !p.isSpectating && <span className="host-badge">HOST</span>}
             </div>
           ))}

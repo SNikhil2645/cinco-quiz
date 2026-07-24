@@ -310,7 +310,7 @@ export default function Quiz() {
             )}
           </AnimatePresence>
 
-          <h2>👁️ Spectating</h2>
+          <h2>🎥 Spectating</h2>
           <p style={{ marginBottom: 12 }}>You are watching this quiz</p>
 
           <AnimatePresence>

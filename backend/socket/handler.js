@@ -25,12 +25,12 @@ function calculateScore(isCorrect, timeTaken, timeLimit, streak, doubleActive, c
   if (!isCorrect) return { scoreGain: 0, newStreak: 0, newMultiplier: 1 };
 
   const speedRatio = Math.max(0, 1 - timeTaken / timeLimit);
-  const speedBonus = Math.round(speedRatio * 50);
+  const speedBonus = Math.round(speedRatio * 25);
 
   const accuracyRatio = totalAnswered > 0 ? correctCount / totalAnswered : 0;
-  const accuracyBonus = Math.round(accuracyRatio * 50);
+  const accuracyBonus = Math.round(accuracyRatio * 25);
 
-  const base = 100 + speedBonus + accuracyBonus;
+  const base = 50 + speedBonus + accuracyBonus;
 
   const newStreak = streak + 1;
   let multiplier = 1;
