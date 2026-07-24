@@ -11,6 +11,15 @@ const socket = io(BACKEND_URL, {
 
 socket.on("connect", () => {
   console.log("Connected:", socket.id);
+  const saved = localStorage.getItem("cincoquiz-session");
+  if (saved) {
+    try {
+      const { roomCode, username, isHost } = JSON.parse(saved);
+      socket.emit("rejoin-room", { roomCode, username, isHost });
+    } catch {
+      localStorage.removeItem("cincoquiz-session");
+    }
+  }
 });
 
 socket.on("connect_error", (err) => {

@@ -7,7 +7,7 @@ import socket from "../socket/service";
 
 export default function HostLobby() {
   const navigate = useNavigate();
-  const { username, roomCode } = useUserStore();
+  const { username, roomCode, setRoomCode } = useUserStore();
   const { setPlayers, resetGame, players: storePlayers } = useGameStore();
   const [players, setPlayersLocal] = useState(storePlayers);
   const [copied, setCopied] = useState(false);
@@ -26,11 +26,25 @@ export default function HostLobby() {
       navigate("/quiz");
     };
 
+    const handleRejoined = (data) => {
+      if (data.status === "active") {
+        navigate("/quiz");
+        return;
+      }
+      if (data.roomCode) setRoomCode(data.roomCode);
+      if (data.players) {
+        setPlayersLocal(data.players);
+        setPlayers(data.players);
+      }
+    };
+
     socket.on("player-joined", handlePlayerJoined);
     socket.on("quiz-started", handleQuizStarted);
+    socket.on("rejoined", handleRejoined);
     return () => {
       socket.off("player-joined", handlePlayerJoined);
       socket.off("quiz-started", handleQuizStarted);
+      socket.off("rejoined", handleRejoined);
     };
   }, [navigate]);
 
@@ -90,7 +104,7 @@ export default function HostLobby() {
           Start Quiz ({players.length} player{players.length !== 1 ? "s" : ""}) 🎯
         </button>
 
-        <button onClick={() => navigate("/")} className="btn-danger" style={{ marginTop: 8 }}>
+        <button onClick={() => { localStorage.removeItem("cincoquiz-session"); navigate("/"); }} className="btn-danger" style={{ marginTop: 8 }}>
           End Room
         </button>
       </motion.div>

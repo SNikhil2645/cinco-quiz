@@ -29,6 +29,7 @@ export default function CreateRoom() {
       setRoomCode(data.roomCode);
       setIsHost(true);
       setPlayers(data.players);
+      localStorage.setItem("cincoquiz-session", JSON.stringify({ roomCode: data.roomCode, username: hostName.trim(), isHost: true }));
       navigate("/host-lobby");
     };
     socket.on("room-created", handleRoomCreated);

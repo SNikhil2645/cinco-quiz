@@ -79,7 +79,9 @@ module.exports = function (io) {
         query.difficulty = settings.difficulty;
         const allQuestions = await Quiz.find(query);
         const shuffled = shuffleArray(allQuestions);
-        rooms[code].questions = shuffled.slice(0, settings.questionCount).map((q) => q._id.toString());
+        const selected = shuffled.slice(0, settings.questionCount);
+        rooms[code].questions = selected.map((q) => q._id.toString());
+        rooms[code].fullQuestions = selected.map((q) => q.toObject());
       } catch (err) {
         console.error("Error fetching questions:", err.message);
       }
@@ -157,7 +159,7 @@ module.exports = function (io) {
       player.answers[questionIndex] = answer;
       player.answerTimes[questionIndex] = timeTaken;
 
-      const quiz = room.questions[questionIndex];
+      const quiz = room.fullQuestions ? room.fullQuestions[questionIndex] : null;
       if (!quiz) return;
 
       const isCorrect = answer === quiz.correct;
@@ -190,7 +192,8 @@ module.exports = function (io) {
         const leaderboard = getLeaderboard(room);
         io.to(roomCode).emit("leaderboard-update", { leaderboard });
 
-        if (room.currentQuestion + 1 >= room.questions.length) {
+        if (room.currentQuestion + 1 >= room.questions.length && !room.quizEnding) {
+          room.quizEnding = true;
           setTimeout(() => endQuiz(io, roomCode), 2000);
         }
       }
@@ -200,6 +203,7 @@ module.exports = function (io) {
       const { roomCode } = data;
       const room = rooms[roomCode];
       if (!room || room.host !== socket.id) return;
+      if (room.status === "finished") return;
 
       room.currentQuestion++;
       if (room.currentQuestion >= room.questions.length) {
@@ -221,7 +225,7 @@ module.exports = function (io) {
       player.powerups[type] = false;
 
       if (type === "fiftyFifty") {
-        const quiz = room.questions[questionIndex];
+        const quiz = room.fullQuestions ? room.fullQuestions[questionIndex] : null;
         if (!quiz) return;
         const wrong = quiz.options.filter((o) => o !== quiz.correct);
         const shuffled = shuffleArray(wrong);
@@ -230,7 +234,7 @@ module.exports = function (io) {
       } else if (type === "doublePoints") {
         player.doublePointsActive = true;
       } else if (type === "freezeTimer") {
-        io.to(roomCode).emit("timer-update", { timeLeft: room.settings.timer });
+        socket.emit("timer-update", { timeLeft: room.settings.timer });
       }
 
       io.to(roomCode).emit("powerup-used", { username: player.username, type });
@@ -321,7 +325,25 @@ module.exports = function (io) {
         if (idx === -1) continue;
 
         if (room.host === socket.id) {
-          io.to(code).emit("room-error", "Host disconnected");
+          if (room.status === "active" && room.players.length > 1) {
+            const leaderboard = getLeaderboard(room);
+            try {
+              Result.create({
+                roomCode: code,
+                players: leaderboard,
+                settings: {
+                  topic: room.settings.topic,
+                  difficulty: room.settings.difficulty,
+                  questionCount: room.settings.questionCount,
+                },
+              });
+            } catch (err) {
+              console.error("Error saving partial results:", err.message);
+            }
+            io.to(code).emit("quiz-ended", { leaderboard });
+          } else {
+            io.to(code).emit("room-error", "Host disconnected");
+          }
           delete rooms[code];
         } else {
           room.players.splice(idx, 1);
@@ -330,6 +352,51 @@ module.exports = function (io) {
             players: room.players.map((p) => ({ username: p.username, isHost: p.socketId === room.host })),
           });
         }
+      }
+    });
+
+    socket.on("rejoin-room", (data) => {
+      const { roomCode, username, isHost } = data;
+      const room = rooms[roomCode];
+      if (!room) return;
+      if (room.status === "finished") return;
+
+      const player = room.players.find((p) => p.username === username);
+      if (!player) return;
+
+      const oldSocketId = player.socketId;
+      player.socketId = socket.id;
+      socket.join(roomCode);
+
+      if (isHost && room.host === oldSocketId) {
+        room.host = socket.id;
+      }
+
+      if (room.status === "active") {
+        const quiz = room.fullQuestions ? room.fullQuestions[room.currentQuestion] : null;
+        socket.emit("rejoined", {
+          roomCode,
+          question: quiz
+            ? { question: quiz.question, options: quiz.options, explanation: quiz.explanation || "" }
+            : null,
+          questionIndex: room.currentQuestion,
+          totalQuestions: room.questions.length,
+          timePerQuestion: room.settings.timer,
+          score: player.score,
+          streak: player.streak,
+          maxStreak: player.maxStreak,
+          powerups: player.powerups,
+          isHost: socket.id === room.host,
+          leaderboard: getLeaderboard(room),
+          players: room.players.map((p) => ({ username: p.username, isHost: p.socketId === room.host })),
+        });
+      } else {
+        socket.emit("rejoined", {
+          roomCode,
+          status: room.status,
+          isHost: socket.id === room.host,
+          players: room.players.map((p) => ({ username: p.username, isHost: p.socketId === room.host })),
+        });
       }
     });
   });
@@ -367,7 +434,7 @@ async function sendQuestion(io, roomCode) {
 
 async function endQuiz(io, roomCode) {
   const room = rooms[roomCode];
-  if (!room) return;
+  if (!room || room.status === "finished") return;
 
   room.status = "finished";
   const leaderboard = getLeaderboard(room);

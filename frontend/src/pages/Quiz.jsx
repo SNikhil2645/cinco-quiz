@@ -40,12 +40,13 @@ export default function Quiz() {
       if (newTime <= 0) {
         clearInterval(timerRef.current);
         if (!g.answerSubmitted && !g.showResult) {
+          const elapsed = timePerQuestionRef.current;
           useGameStore.getState().setAnswerSubmitted(true);
           socket.emit("submit-answer", {
             roomCode,
             questionIndex: questionIndexRef.current,
             answer: null,
-            timeTaken: 0,
+            timeTaken: elapsed,
           });
         }
       }
@@ -85,11 +86,6 @@ export default function Quiz() {
       }
     };
 
-    const handleTimeWarning = () => {
-      setToast("⏰ Time's almost up!");
-      setTimeout(() => setToast(null), 1500);
-    };
-
     const handleLeaderboardUpdate = (data) => {
       useGameStore.getState().setLeaderboard(data.leaderboard);
       setShowLeaderboard(true);
@@ -111,6 +107,34 @@ export default function Quiz() {
       useGameStore.getState().eliminateOptions(data.options);
     };
 
+    const handleTimerUpdate = (data) => {
+      clearInterval(timerRef.current);
+      const newTime = data.timeLeft;
+      timeLeftRef.current = newTime;
+      setTimeLeftLocal(newTime);
+
+      timerRef.current = setInterval(() => {
+        const g = gameRef.current;
+        const nt = timeLeftRef.current - 1;
+        timeLeftRef.current = nt;
+        setTimeLeftLocal(nt);
+
+        if (nt <= 0) {
+          clearInterval(timerRef.current);
+          if (!g.answerSubmitted && !g.showResult) {
+            const elapsed = timePerQuestionRef.current;
+            useGameStore.getState().setAnswerSubmitted(true);
+            socket.emit("submit-answer", {
+              roomCode,
+              questionIndex: questionIndexRef.current,
+              answer: null,
+              timeTaken: elapsed,
+            });
+          }
+        }
+      }, 1000);
+    };
+
     const handleRoomError = (msg) => {
       setToast(msg);
       setTimeout(() => {
@@ -118,25 +142,65 @@ export default function Quiz() {
       }, 2000);
     };
 
+    const handleRejoined = (data) => {
+      if (data.status === "waiting") {
+        if (data.isHost) {
+          useUserStore.getState().setIsHost(true);
+          navigate("/host-lobby");
+        } else {
+          useUserStore.getState().setIsHost(false);
+          navigate("/player-lobby");
+        }
+        return;
+      }
+      useUserStore.getState().setRoomCode(data.roomCode);
+      useUserStore.getState().setIsHost(data.isHost);
+      if (data.question) {
+        useGameStore.getState().setQuestion(
+          data.question,
+          data.questionIndex,
+          data.totalQuestions
+        );
+        useGameStore.getState().setAnswerSubmitted(false);
+        useGameStore.getState().showResult = false;
+        const s = useGameStore.getState();
+        useGameStore.setState({
+          score: data.score,
+          streak: data.streak,
+          maxStreak: data.maxStreak,
+          powerups: data.powerups,
+          leaderboard: data.leaderboard,
+        });
+        startTimer(data.timePerQuestion);
+      }
+      if (data.players) {
+        useGameStore.getState().setPlayers(data.players);
+      }
+      setToast("Reconnected!");
+      setTimeout(() => setToast(null), 2000);
+    };
+
     socket.on("new-question", handleNewQuestion);
     socket.on("answer-result", handleAnswerResult);
     socket.on("opponent-answered", handleOpponentAnswer);
-    socket.on("time-warning", handleTimeWarning);
     socket.on("leaderboard-update", handleLeaderboardUpdate);
     socket.on("quiz-ended", handleQuizEnded);
     socket.on("powerup-used", handlePowerupUsed);
     socket.on("eliminated-options", handleEliminatedOptions);
+    socket.on("timer-update", handleTimerUpdate);
+    socket.on("rejoined", handleRejoined);
     socket.on("room-error", handleRoomError);
 
     return () => {
       socket.off("new-question", handleNewQuestion);
       socket.off("answer-result", handleAnswerResult);
       socket.off("opponent-answered", handleOpponentAnswer);
-      socket.off("time-warning", handleTimeWarning);
       socket.off("leaderboard-update", handleLeaderboardUpdate);
       socket.off("quiz-ended", handleQuizEnded);
       socket.off("powerup-used", handlePowerupUsed);
       socket.off("eliminated-options", handleEliminatedOptions);
+      socket.off("timer-update", handleTimerUpdate);
+      socket.off("rejoined", handleRejoined);
       socket.off("room-error", handleRoomError);
     };
   }, [navigate, username, roomCode]);

@@ -43,6 +43,10 @@ export default function Home() {
         <button className="btn-primary" onClick={() => navigate("/mode")} style={{ marginTop: 20 }}>
           Play Now 🚀
         </button>
+
+        <button onClick={() => navigate("/view-results")} style={{ marginTop: 8 }}>
+          📊 View Past Results
+        </button>
       </motion.div>
     </div>
   );

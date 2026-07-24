@@ -8,6 +8,7 @@ import HostLobby from "./pages/HostLobby";
 import PlayerLobby from "./pages/PlayerLobby";
 import Quiz from "./pages/Quiz";
 import Results from "./pages/Results";
+import ViewResults from "./pages/ViewResults";
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
           <Route path="/player-lobby" element={<PlayerLobby />} />
           <Route path="/quiz" element={<Quiz />} />
           <Route path="/results" element={<Results />} />
+          <Route path="/view-results" element={<ViewResults />} />
         </Routes>
       </div>
     </BrowserRouter>

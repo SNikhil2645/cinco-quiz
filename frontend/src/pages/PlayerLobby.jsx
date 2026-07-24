@@ -7,7 +7,7 @@ import socket from "../socket/service";
 
 export default function PlayerLobby() {
   const navigate = useNavigate();
-  const { roomCode, username } = useUserStore();
+  const { roomCode, username, setIsHost, setRoomCode: setRoomCodeUser } = useUserStore();
   const { setPlayers, resetGame, players: storePlayers } = useGameStore();
   const [players, setPlayersLocal] = useState(storePlayers);
 
@@ -25,11 +25,24 @@ export default function PlayerLobby() {
       navigate("/quiz");
     };
 
+    const handleRejoined = (data) => {
+      if (data.status === "active") {
+        navigate("/quiz");
+        return;
+      }
+      if (data.players) {
+        setPlayersLocal(data.players);
+        setPlayers(data.players);
+      }
+    };
+
     socket.on("player-joined", handlePlayerJoined);
     socket.on("quiz-started", handleQuizStarted);
+    socket.on("rejoined", handleRejoined);
     return () => {
       socket.off("player-joined", handlePlayerJoined);
       socket.off("quiz-started", handleQuizStarted);
+      socket.off("rejoined", handleRejoined);
     };
   }, [navigate]);
 

@@ -164,6 +164,7 @@ export default function Results() {
         <button
           className="btn-primary"
           onClick={() => {
+            localStorage.removeItem("cincoquiz-session");
             resetGame();
             navigate("/");
           }}

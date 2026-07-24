@@ -42,6 +42,7 @@ export default function SinglePlayerSetup() {
     const handleSingleplayerStarted = (data) => {
       setIsHost(true);
       setRoomCode(data.roomCode);
+      localStorage.setItem("cincoquiz-session", JSON.stringify({ roomCode: data.roomCode, username: form.username.trim(), isHost: true }));
       navigate("/quiz");
     };
     socket.on("singleplayer-started", handleSingleplayerStarted);

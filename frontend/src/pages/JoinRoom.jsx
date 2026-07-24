@@ -17,6 +17,7 @@ export default function JoinRoom() {
     const handlePlayerJoined = (data) => {
       setPlayers(data.players);
       setIsHost(false);
+      localStorage.setItem("cincoquiz-session", JSON.stringify({ roomCode: code.trim(), username: username.trim(), isHost: false }));
       navigate("/player-lobby");
     };
     const handleRoomError = (msg) => {
