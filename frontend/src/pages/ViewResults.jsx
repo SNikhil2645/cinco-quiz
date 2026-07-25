@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { BarChart3, Medal, ArrowLeft } from "lucide-react";
 
 const BACKEND_URL = "https://cinco-quiz-backend2.onrender.com";
 
@@ -39,7 +40,7 @@ export default function ViewResults() {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
       >
-        <h1>📊 Past Results</h1>
+        <h1 style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}><BarChart3 size={32} /> Past Results</h1>
         <p>Enter a room code to view quiz results</p>
 
         <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
@@ -72,7 +73,7 @@ export default function ViewResults() {
               results.players.map((p, i) => (
                 <div className={`leaderboard-row ${i === 0 ? "rank-1" : ""}`} key={i}>
                   <span className="leaderboard-rank">
-                    {i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i + 1}`}
+                    {i === 0 ? <Medal size={18} color="#fbbf24" /> : i === 1 ? <Medal size={18} color="#94a3b8" /> : i === 2 ? <Medal size={18} color="#d97706" /> : `#${i + 1}`}
                   </span>
                   <span className="leaderboard-name">{p.username}</span>
                   <span className="leaderboard-score">{p.score}</span>
@@ -84,8 +85,8 @@ export default function ViewResults() {
           </motion.div>
         )}
 
-        <button onClick={() => navigate("/")} className="btn-small" style={{ marginTop: 20, width: "auto" }}>
-          ← Back to Home
+        <button onClick={() => navigate("/")} className="btn-small" style={{ marginTop: 20, width: "auto", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+          <ArrowLeft size={14} /> Back to Home
         </button>
       </motion.div>
     </div>

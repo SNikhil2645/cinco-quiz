@@ -1,9 +1,17 @@
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { Eye, BarChart3, Medal, Flame, Timer, Crosshair, Zap, Snowflake, CheckCircle, XCircle, Users } from "lucide-react";
 import useUserStore from "../store/userStore";
 import useGameStore from "../store/gameStore";
 import socket from "../socket/service";
+
+function RankIcon({ i }) {
+  if (i === 0) return <Medal size={18} color="#fbbf24" />;
+  if (i === 1) return <Medal size={18} color="#94a3b8" />;
+  if (i === 2) return <Medal size={18} color="#d97706" />;
+  return <span style={{ fontSize: 13, fontWeight: 700, opacity: 0.5 }}>#{i + 1}</span>;
+}
 
 export default function Quiz() {
   const navigate = useNavigate();
@@ -283,11 +291,11 @@ export default function Quiz() {
       socket.emit("use-powerup", { roomCode, type: "fiftyFifty", questionIndex: game.questionIndex });
     } else if (type === "doublePoints") {
       socket.emit("use-powerup", { roomCode, type: "doublePoints", questionIndex: game.questionIndex });
-      setToast("⚡ Double Points activated!");
+      setToast("Double Points activated!");
       setTimeout(() => setToast(null), 2000);
     } else if (type === "freezeTimer") {
       socket.emit("use-powerup", { roomCode, type: "freezeTimer", questionIndex: game.questionIndex });
-      setToast("❄️ Timer frozen for 10s!");
+      setToast("Timer frozen for 10s!");
       setTimeout(() => setToast(null), 2000);
     }
     useGameStore.getState().usePowerup(type);
@@ -310,7 +318,7 @@ export default function Quiz() {
             )}
           </AnimatePresence>
 
-          <h2>🎥 Spectating</h2>
+          <h2 style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}><Eye size={26} /> Spectating</h2>
           <p style={{ marginBottom: 12 }}>You are watching this quiz</p>
 
           <AnimatePresence>
@@ -320,10 +328,10 @@ export default function Quiz() {
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
               >
-                <h3>📊 Live Standings</h3>
+                <h3 style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}><BarChart3 size={18} /> Live Standings</h3>
                 {game.leaderboard.map((p, i) => (
                   <div className={`leaderboard-row rank-${i + 1}`} key={i}>
-                    <span className="leaderboard-rank">{i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i + 1}`}</span>
+                    <span className="leaderboard-rank"><RankIcon i={i} /></span>
                     <span className="leaderboard-name">{p.username}</span>
                     <span className="leaderboard-score">{p.score}</span>
                   </div>
@@ -379,14 +387,14 @@ export default function Quiz() {
             animate={{ scale: 1 }}
             key={game.streak}
           >
-            🔥 {game.streak}x Streak {game.multiplier > 1 ? `(${game.multiplier}x points)` : ""}
+            <Flame size={14} /> {game.streak}x Streak {game.multiplier > 1 ? `(${game.multiplier}x points)` : ""}
           </motion.div>
         )}
 
         {!playerFinished && (
           <>
-            <div className={`timer-display ${timeLeft <= 5 ? "timer-warning" : ""}`}>
-              ⏱️ {timeLeft}s
+            <div className={`timer-display ${timeLeft <= 5 ? "timer-warning" : ""}`} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+              <Timer size={28} /> {timeLeft}s
             </div>
 
             <motion.h2
@@ -406,7 +414,7 @@ export default function Quiz() {
                   disabled={!game.powerups.fiftyFifty || game.answerSubmitted}
                   title="50-50: Remove 2 wrong answers"
                 >
-                  🎯
+                  <Crosshair size={20} />
                 </button>
                 <button
                   className={`powerup-btn ${!game.powerups.doublePoints ? "disabled" : ""}`}
@@ -414,7 +422,7 @@ export default function Quiz() {
                   disabled={!game.powerups.doublePoints || game.answerSubmitted}
                   title="Double Points: 2x on next correct answer"
                 >
-                  ⚡
+                  <Zap size={20} />
                 </button>
                 <button
                   className={`powerup-btn ${!game.powerups.freezeTimer ? "disabled" : ""}`}
@@ -422,7 +430,7 @@ export default function Quiz() {
                   disabled={!game.powerups.freezeTimer || game.answerSubmitted}
                   title="Freeze Timer: +10 seconds"
                 >
-                  ❄️
+                  <Snowflake size={20} />
                 </button>
               </div>
             )}
@@ -467,8 +475,8 @@ export default function Quiz() {
                 margin: "16px 0",
               }}
             >
-              <p style={{ fontSize: 18, fontWeight: 700, margin: 0, color: "var(--accent-primary)" }}>
-                ✅ You finished all questions!
+              <p style={{ fontSize: 18, fontWeight: 700, margin: 0, color: "var(--accent-primary)", display: "flex", alignItems: "center", gap: 8 }}>
+                <CheckCircle size={20} /> You finished all questions!
               </p>
               <p style={{ fontSize: 14, margin: "8px 0 0 0", color: "var(--text-secondary)" }}>
                 Waiting for other players to finish...
@@ -491,8 +499,8 @@ export default function Quiz() {
                 marginTop: 12,
               }}
             >
-              <p style={{ fontSize: 18, fontWeight: 700, margin: 0, color: game.isCorrect ? "var(--correct-green)" : "var(--wrong-red)" }}>
-                {game.isCorrect ? "✅ Correct!" : "❌ Wrong!"}
+              <p style={{ fontSize: 18, fontWeight: 700, margin: 0, color: game.isCorrect ? "var(--correct-green)" : "var(--wrong-red)", display: "flex", alignItems: "center", gap: 8 }}>
+                {game.isCorrect ? <><CheckCircle size={20} /> Correct!</> : <><XCircle size={20} /> Wrong!</>}
               </p>
               {!game.isCorrect && (
                 <p style={{ fontSize: 14, margin: "4px 0 0 0", color: "var(--text-secondary)" }}>
@@ -509,9 +517,9 @@ export default function Quiz() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              style={{ fontSize: 13, color: "var(--accent-primary)", marginTop: 8 }}
+              style={{ fontSize: 13, color: "var(--accent-primary)", marginTop: 8, display: "flex", alignItems: "center", gap: 6 }}
             >
-              ⚔️ {opponentAnswered}
+              <Users size={14} /> {opponentAnswered}
             </motion.div>
           )}
         </AnimatePresence>
@@ -537,10 +545,10 @@ export default function Quiz() {
               exit={{ opacity: 0, height: 0 }}
               style={{ marginTop: 20 }}
             >
-              <h3>📊 Live Standings</h3>
+              <h3 style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}><BarChart3 size={18} /> Live Standings</h3>
               {game.leaderboard.slice(0, 5).map((p, i) => (
                 <div className={`leaderboard-row rank-${i + 1}`} key={i}>
-                  <span className="leaderboard-rank">{i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i + 1}`}</span>
+                  <span className="leaderboard-rank"><RankIcon i={i} /></span>
                   <span className="leaderboard-name">{p.username}</span>
                   <span className="leaderboard-score">{p.score}</span>
                 </div>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { Target, Rocket, ArrowLeft } from "lucide-react";
 import useUserStore from "../store/userStore";
 import useGameStore from "../store/gameStore";
 import socket from "../socket/service";
@@ -57,7 +58,7 @@ export default function SinglePlayerSetup() {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
       >
-        <h1>🎯 Single Player</h1>
+        <h1 style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}><Target size={32} /> Single Player</h1>
         <p>Challenge yourself with CS questions</p>
 
         <label>Username</label>
@@ -98,12 +99,12 @@ export default function SinglePlayerSetup() {
           <option value={30}>30</option>
         </select>
 
-        <button className="btn-primary" onClick={handleStart} style={{ marginTop: 20 }}>
-          Start Quiz 🚀
+        <button className="btn-primary" onClick={handleStart} style={{ marginTop: 20, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+          <Rocket size={18} /> Start Quiz
         </button>
 
-        <button onClick={() => navigate("/mode")} style={{ marginTop: 8, opacity: 0.6 }}>
-          ← Back
+        <button onClick={() => navigate("/mode")} style={{ marginTop: 8, opacity: 0.6, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+          <ArrowLeft size={16} /> Back
         </button>
       </motion.div>
     </div>

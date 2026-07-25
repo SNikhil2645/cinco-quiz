@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { Trophy, Medal, Flame, Home } from "lucide-react";
 import useUserStore from "../store/userStore";
 import useGameStore from "../store/gameStore";
 
@@ -29,7 +30,6 @@ export default function Results() {
 
   return (
     <div className="screen">
-      {/* Confetti */}
       {confetti.map((c) => (
         <div
           key={c.id}
@@ -55,14 +55,13 @@ export default function Results() {
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ delay: 0.3, type: "spring" }}
-          style={{ fontSize: 64 }}
+          style={{ display: "flex", justifyContent: "center", marginBottom: 4 }}
         >
-          🏆
+          <Trophy size={56} color="var(--gold)" />
         </motion.div>
 
         <h1>Quiz Complete!</h1>
 
-        {/* Podium */}
         {podium.length >= 2 && (
           <div className="podium-container">
             {podium.length >= 2 && (
@@ -75,7 +74,7 @@ export default function Results() {
                   animate={{ height: 120 }}
                   transition={{ delay: 0.6, duration: 0.5 }}
                 >
-                  🥈
+                  <Medal size={24} color="#94a3b8" />
                 </motion.div>
               </div>
             )}
@@ -89,7 +88,7 @@ export default function Results() {
                   animate={{ height: 160 }}
                   transition={{ delay: 0.4, duration: 0.5 }}
                 >
-                  🥇
+                  <Medal size={28} color="#fbbf24" />
                 </motion.div>
               </div>
             )}
@@ -103,14 +102,13 @@ export default function Results() {
                   animate={{ height: 90 }}
                   transition={{ delay: 0.8, duration: 0.5 }}
                 >
-                  🥉
+                  <Medal size={22} color="#d97706" />
                 </motion.div>
               </div>
             )}
           </div>
         )}
 
-        {/* Your Stats */}
         <h3>Your Performance</h3>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginTop: 12 }}>
           <div className="stat-card">
@@ -129,11 +127,12 @@ export default function Results() {
           </div>
           <div className="stat-card">
             <div className="stat-label">Max Streak</div>
-            <div className="stat-value" style={{ color: "var(--accent-primary)" }}>🔥 {maxStreak}</div>
+            <div className="stat-value" style={{ color: "var(--accent-primary)", display: "flex", alignItems: "center", justifyContent: "center", gap: 4 }}>
+              <Flame size={18} /> {maxStreak}
+            </div>
           </div>
         </div>
 
-        {/* Full Leaderboard */}
         {leaderboard.length > 0 && (
           <>
             <h3>Final Standings</h3>
@@ -148,7 +147,7 @@ export default function Results() {
                   style={p.username === username ? { border: "1px solid var(--accent-primary)" } : {}}
                 >
                   <span className="leaderboard-rank">
-                    {i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i + 1}`}
+                    {i === 0 ? <Medal size={18} color="#fbbf24" /> : i === 1 ? <Medal size={18} color="#94a3b8" /> : i === 2 ? <Medal size={18} color="#d97706" /> : `#${i + 1}`}
                   </span>
                   <span className="leaderboard-name">
                     {p.username} {p.username === username ? "(You)" : ""}
@@ -160,7 +159,6 @@ export default function Results() {
           </>
         )}
 
-        {/* Actions */}
         <button
           className="btn-primary"
           onClick={() => {
@@ -168,9 +166,9 @@ export default function Results() {
             resetGame();
             navigate("/");
           }}
-          style={{ marginTop: 24 }}
+          style={{ marginTop: 24, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}
         >
-          Back to Home 🏠
+          <Home size={18} /> Back to Home
         </button>
       </motion.div>
     </div>

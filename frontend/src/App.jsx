@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import ParticleBackground from "./components/ParticleBackground";
 import Home from "./pages/Home";
 import ModeSelect from "./pages/ModeSelect";
 import SinglePlayerSetup from "./pages/SinglePlayerSetup";
@@ -14,9 +15,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <div className="app-bg">
-        <div className="bg-bubble bg-bubble-1" />
-        <div className="bg-bubble bg-bubble-2" />
-        <div className="bg-bubble bg-bubble-3" />
+        <ParticleBackground />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/mode" element={<ModeSelect />} />

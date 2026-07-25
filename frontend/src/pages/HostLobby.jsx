@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { Home, Eye, Crown, User, Check, Play, Trash2 } from "lucide-react";
 import useUserStore from "../store/userStore";
 import useGameStore from "../store/gameStore";
 import socket from "../socket/service";
@@ -76,7 +77,7 @@ export default function HostLobby() {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
       >
-        <h1>🏠 Host Lobby</h1>
+        <h1 style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}><Home size={32} /> Host Lobby</h1>
         <p>Share this code with players to join</p>
 
         {isSpectating && (
@@ -89,8 +90,12 @@ export default function HostLobby() {
             fontWeight: 600,
             marginBottom: 12,
             color: "var(--accent-primary)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 6,
           }}>
-            🎥 Spectate Mode — You will watch, not play
+            <Eye size={14} /> Spectate Mode — You will watch, not play
           </div>
         )}
 
@@ -103,8 +108,8 @@ export default function HostLobby() {
           {roomCode}
         </div>
 
-        <p style={{ fontSize: 13, marginTop: -8 }}>
-          {copied ? "✅ Copied!" : "Click code to copy"}
+        <p style={{ fontSize: 13, marginTop: -8, display: "flex", alignItems: "center", justifyContent: "center", gap: 4 }}>
+          {copied ? <><Check size={14} /> Copied!</> : "Click code to copy"}
         </p>
 
         <div style={{ display: "flex", justifyContent: "space-between", marginTop: 16 }}>
@@ -114,8 +119,11 @@ export default function HostLobby() {
         <div style={{ marginTop: 12 }}>
           {players.map((p, i) => (
             <div className="player-item" key={i}>
-              <span>{p.isHost ? "👑 " : "👤 "}{p.username}</span>
-              {p.isHost && p.isSpectating && <span style={{ fontSize: 11, color: "var(--accent-primary)" }}>🎥 SPECTATING</span>}
+              <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                {p.isHost ? <Crown size={15} color="var(--accent-primary)" /> : <User size={15} />}
+                {p.username}
+              </span>
+              {p.isHost && p.isSpectating && <span style={{ fontSize: 11, color: "var(--accent-primary)", display: "flex", alignItems: "center", gap: 4 }}><Eye size={12} /> SPECTATING</span>}
               {p.isHost && !p.isSpectating && <span className="host-badge">HOST</span>}
             </div>
           ))}
@@ -126,12 +134,12 @@ export default function HostLobby() {
           )}
         </div>
 
-        <button className="btn-primary" onClick={handleStartQuiz} disabled={activePlayers.length < 1} style={{ marginTop: 20 }}>
-          Start Quiz ({activePlayers.length} player{activePlayers.length !== 1 ? "s" : ""}) 🎯
+        <button className="btn-primary" onClick={handleStartQuiz} disabled={activePlayers.length < 1} style={{ marginTop: 20, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+          <Play size={18} /> Start Quiz ({activePlayers.length} player{activePlayers.length !== 1 ? "s" : ""})
         </button>
 
-        <button onClick={() => { localStorage.removeItem("cincoquiz-session"); navigate("/"); }} className="btn-danger" style={{ marginTop: 8 }}>
-          End Room
+        <button onClick={() => { localStorage.removeItem("cincoquiz-session"); navigate("/"); }} className="btn-danger" style={{ marginTop: 8, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+          <Trash2 size={16} /> End Room
         </button>
       </motion.div>
     </div>

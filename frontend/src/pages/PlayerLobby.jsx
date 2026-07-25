@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { Clock, Gamepad2, User } from "lucide-react";
 import useUserStore from "../store/userStore";
 import useGameStore from "../store/gameStore";
 import socket from "../socket/service";
@@ -54,7 +55,7 @@ export default function PlayerLobby() {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
       >
-        <h1>⏳ Waiting Lobby</h1>
+        <h1 style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}><Clock size={32} /> Waiting Lobby</h1>
         <p>Waiting for host to start the quiz...</p>
 
         <div
@@ -68,8 +69,8 @@ export default function PlayerLobby() {
         <div style={{ marginTop: 12 }}>
           {players.map((p, i) => (
             <div className="player-item" key={i}>
-              <span>
-                {p.username === username ? "🎮 " : "👤 "}
+              <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                {p.username === username ? <Gamepad2 size={15} color="var(--accent-primary)" /> : <User size={15} />}
                 {p.username}
                 {p.username === username ? " (You)" : ""}
               </span>
@@ -81,9 +82,9 @@ export default function PlayerLobby() {
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
-            style={{ fontSize: 24 }}
+            style={{ display: "flex" }}
           >
-            ⏳
+            <Clock size={22} color="var(--text-secondary)" />
           </motion.div>
           <span style={{ color: "var(--text-secondary)", fontSize: 14 }}>Waiting for host...</span>
         </div>

@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Trophy, Zap, Users, Brain } from "lucide-react";
+import { Trophy, Zap, Users, Brain, BarChart3, ArrowRight } from "lucide-react";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -55,8 +55,8 @@ export default function Home() {
           Play Now
         </button>
 
-        <button onClick={() => navigate("/view-results")} style={{ marginTop: 8 }}>
-          📊 View Past Results
+        <button onClick={() => navigate("/view-results")} style={{ marginTop: 8, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+          <BarChart3 size={16} /> View Past Results
         </button>
       </motion.div>
     </div>

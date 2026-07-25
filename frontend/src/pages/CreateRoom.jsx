@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { Home, Rocket, ArrowLeft } from "lucide-react";
 import useUserStore from "../store/userStore";
 import useGameStore from "../store/gameStore";
 import socket from "../socket/service";
@@ -54,7 +55,7 @@ export default function CreateRoom() {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
       >
-        <h1>🏠 Create Room</h1>
+        <h1 style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}><Home size={32} /> Create Room</h1>
         <p>Set up your quiz room as host</p>
 
         <label>Your Name (Host)</label>
@@ -115,12 +116,12 @@ export default function CreateRoom() {
           Spectate Mode (host only watches, doesn't play)
         </label>
 
-        <button className="btn-primary" onClick={handleCreate} style={{ marginTop: 20 }}>
-          Create Room 🚀
+        <button className="btn-primary" onClick={handleCreate} style={{ marginTop: 20, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+          <Rocket size={18} /> Create Room
         </button>
 
-        <button onClick={() => navigate("/mode")} style={{ marginTop: 8, opacity: 0.6 }}>
-          ← Back
+        <button onClick={() => navigate("/mode")} style={{ marginTop: 8, opacity: 0.6, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+          <ArrowLeft size={16} /> Back
         </button>
       </motion.div>
     </div>
