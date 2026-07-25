@@ -9,9 +9,9 @@ export default function Home() {
     <div className="screen">
       <motion.div
         className="glass-card"
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.45, ease: "easeOut" }}
       >
         <motion.div
           initial={{ scale: 0 }}
@@ -23,11 +23,11 @@ export default function Home() {
             width: 80,
             height: 80,
             borderRadius: 20,
-            background: "linear-gradient(135deg, var(--accent-cyan), var(--accent-purple))",
+            background: "var(--accent-gradient)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            boxShadow: "0 4px 24px rgba(0, 245, 255, 0.3)",
+            boxShadow: "0 4px 20px rgba(226, 137, 90, 0.2)",
           }}>
             <Brain size={44} color="#fff" strokeWidth={2} />
           </div>
@@ -38,15 +38,15 @@ export default function Home() {
 
         <div style={{ display: "flex", gap: 16, margin: "20px 0", justifyContent: "center" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "var(--text-secondary)" }}>
-            <Zap size={16} color="var(--accent-cyan)" />
+            <Zap size={16} color="var(--accent-primary)" />
             <span>Real-Time</span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "var(--text-secondary)" }}>
-            <Users size={16} color="var(--accent-cyan)" />
+            <Users size={16} color="var(--accent-primary)" />
             <span>Multiplayer</span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "var(--text-secondary)" }}>
-            <Trophy size={16} color="var(--accent-cyan)" />
+            <Trophy size={16} color="var(--accent-primary)" />
             <span>Competitive</span>
           </div>
         </div>

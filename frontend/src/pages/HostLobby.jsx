@@ -72,8 +72,9 @@ export default function HostLobby() {
     <div className="screen">
       <motion.div
         className="glass-card"
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
       >
         <h1>🏠 Host Lobby</h1>
         <p>Share this code with players to join</p>
@@ -82,12 +83,12 @@ export default function HostLobby() {
           <div style={{
             padding: "8px 16px",
             borderRadius: 10,
-            background: "rgba(138, 43, 226, 0.2)",
-            border: "1px solid rgba(138, 43, 226, 0.4)",
+            background: "rgba(226, 137, 90, 0.1)",
+            border: "1px solid rgba(226, 137, 90, 0.25)",
             fontSize: 13,
             fontWeight: 600,
             marginBottom: 12,
-            color: "var(--accent-purple)",
+            color: "var(--accent-primary)",
           }}>
             🎥 Spectate Mode — You will watch, not play
           </div>
@@ -114,7 +115,7 @@ export default function HostLobby() {
           {players.map((p, i) => (
             <div className="player-item" key={i}>
               <span>{p.isHost ? "👑 " : "👤 "}{p.username}</span>
-              {p.isHost && p.isSpectating && <span style={{ fontSize: 11, color: "var(--accent-purple)" }}>🎥 SPECTATING</span>}
+              {p.isHost && p.isSpectating && <span style={{ fontSize: 11, color: "var(--accent-primary)" }}>🎥 SPECTATING</span>}
               {p.isHost && !p.isSpectating && <span className="host-badge">HOST</span>}
             </div>
           ))}

@@ -15,7 +15,7 @@ export default function Results() {
   const podium = leaderboard.slice(0, 3);
 
   useEffect(() => {
-    const colors = ["#ff5252", "#00f5ff", "#ffd700", "#8a2be2", "#00e676", "#ff9800"];
+    const colors = ["#f87171", "#e2895a", "#fbbf24", "#4ade80", "#94a3b8", "#d97706"];
     const pieces = Array.from({ length: 50 }, (_, i) => ({
       id: i,
       left: Math.random() * 100,
@@ -47,9 +47,9 @@ export default function Results() {
 
       <motion.div
         className="glass-card"
-        initial={{ opacity: 0, scale: 0.9 }}
+        initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
       >
         <motion.div
           initial={{ scale: 0 }}
@@ -115,7 +115,7 @@ export default function Results() {
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginTop: 12 }}>
           <div className="stat-card">
             <div className="stat-label">Score</div>
-            <div className="stat-value" style={{ color: "var(--accent-cyan)" }}>{score}</div>
+            <div className="stat-value" style={{ color: "var(--accent-primary)" }}>{score}</div>
           </div>
           <div className="stat-card">
             <div className="stat-label">Rank</div>
@@ -129,7 +129,7 @@ export default function Results() {
           </div>
           <div className="stat-card">
             <div className="stat-label">Max Streak</div>
-            <div className="stat-value" style={{ color: "var(--accent-cyan)" }}>🔥 {maxStreak}</div>
+            <div className="stat-value" style={{ color: "var(--accent-primary)" }}>🔥 {maxStreak}</div>
           </div>
         </div>
 
@@ -145,7 +145,7 @@ export default function Results() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.1 }}
-                  style={p.username === username ? { border: "1px solid var(--accent-cyan)" } : {}}
+                  style={p.username === username ? { border: "1px solid var(--accent-primary)" } : {}}
                 >
                   <span className="leaderboard-rank">
                     {i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i + 1}`}

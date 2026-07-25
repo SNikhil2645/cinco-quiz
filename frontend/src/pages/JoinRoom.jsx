@@ -50,8 +50,9 @@ export default function JoinRoom() {
     <div className="screen">
       <motion.div
         className="glass-card"
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
       >
         <h1>🌍 Join Room</h1>
         <p>Enter the room code from your host</p>

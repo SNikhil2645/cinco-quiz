@@ -462,12 +462,12 @@ export default function Quiz() {
               style={{
                 padding: 20,
                 borderRadius: 14,
-                background: "rgba(0, 245, 255, 0.1)",
-                border: "1px solid var(--accent-cyan)",
+                background: "rgba(226, 137, 90, 0.08)",
+                border: "1px solid var(--accent-primary)",
                 margin: "16px 0",
               }}
             >
-              <p style={{ fontSize: 18, fontWeight: 700, margin: 0, color: "var(--accent-cyan)" }}>
+              <p style={{ fontSize: 18, fontWeight: 700, margin: 0, color: "var(--accent-primary)" }}>
                 ✅ You finished all questions!
               </p>
               <p style={{ fontSize: 14, margin: "8px 0 0 0", color: "var(--text-secondary)" }}>
@@ -486,7 +486,7 @@ export default function Quiz() {
               style={{
                 padding: 16,
                 borderRadius: 14,
-                background: game.isCorrect ? "rgba(0, 230, 118, 0.15)" : "rgba(255, 82, 82, 0.15)",
+                background: game.isCorrect ? "rgba(74, 222, 128, 0.1)" : "rgba(248, 113, 113, 0.1)",
                 border: `1px solid ${game.isCorrect ? "var(--correct-green)" : "var(--wrong-red)"}`,
                 marginTop: 12,
               }}
@@ -509,7 +509,7 @@ export default function Quiz() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              style={{ fontSize: 13, color: "var(--accent-cyan)", marginTop: 8 }}
+              style={{ fontSize: 13, color: "var(--accent-primary)", marginTop: 8 }}
             >
               ⚔️ {opponentAnswered}
             </motion.div>
