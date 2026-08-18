@@ -7,10 +7,13 @@
 }
 
 :root {
-  --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #1a2742 100%);
-  --glass-bg: rgba(255, 255, 255, 0.06);
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  --bg-gradient: linear-gradient(160deg, #0b0e1a 0%, #111827 35%, #0f1d32 60%, #141b2d 100%);
+  --bg-mesh-1: radial-gradient(ellipse 60% 50% at 15% 20%, rgba(226, 137, 90, 0.07) 0%, transparent 70%);
+  --bg-mesh-2: radial-gradient(ellipse 50% 60% at 85% 75%, rgba(99, 102, 241, 0.06) 0%, transparent 70%);
+  --bg-mesh-3: radial-gradient(ellipse 40% 40% at 50% 50%, rgba(245, 158, 11, 0.04) 0%, transparent 60%);
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
   --accent-primary: #e2895a;
   --accent-primary-soft: rgba(226, 137, 90, 0.15);
   --accent-gradient: linear-gradient(135deg, #e2895a, #c9784a);
@@ -19,7 +22,7 @@
   --text-secondary: rgba(241, 245, 249, 0.6);
   --correct-green: #4ade80;
   --wrong-red: #f87171;
-  --gold: #fbbf24;
+  --gold: #f59e0b;
   --silver: #94a3b8;
   --bronze: #d97706;
   --surface-subtle: rgba(255, 255, 255, 0.04);
@@ -47,6 +50,15 @@ body {
   position: relative;
   min-height: 100vh;
   min-height: 100dvh;
+}
+
+.app-bg::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: var(--bg-mesh-1), var(--bg-mesh-2), var(--bg-mesh-3);
+  pointer-events: none;
+  z-index: 0;
 }
 
 @keyframes crossSlideIn {
