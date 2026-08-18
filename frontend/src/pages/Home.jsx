@@ -19,33 +19,28 @@ export default function Home() {
           transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
           style={{ marginBottom: 8, display: "flex", justifyContent: "center" }}
         >
-          <div style={{
-            width: 80,
-            height: 80,
-            borderRadius: 22,
-            background: "linear-gradient(135deg, #a855f7, #e2895a)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            boxShadow: "0 6px 28px rgba(168, 85, 247, 0.30), 0 2px 8px rgba(226, 137, 90, 0.20)",
-            position: "relative",
-          }}>
-            <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
-              <path
-                d="M22 4C12.06 4 4 12.06 4 22s8.06 18 18 18 18-8.06 18-18S31.94 4 22 4z"
-                fill="none"
-              />
-              <path
-                d="M17 15.5C17 12.46 19.46 10 22.5 10H24c2.76 0 5 2.24 5 5s-2.24 5-5 5h-1.5c-1.38 0-2.5 1.12-2.5 2.5V28"
-                stroke="white"
-                strokeWidth="3"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                fill="none"
-              />
-              <circle cx="22" cy="33" r="2" fill="white" />
-            </svg>
-          </div>
+          <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="logoGrad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="#bc8168" />
+                <stop offset="100%" stopColor="#76ff4c" />
+              </linearGradient>
+            </defs>
+            <path
+              d="M32 8C18.745 8 8 18.745 8 32s10.745 24 24 24 24-10.745 24-24S45.255 8 32 8z"
+              fill="url(#logoGrad)"
+              opacity="0.12"
+            />
+            <path
+              d="M24 23c0-4.97 4.03-9 9-9h2c4.42 0 8 3.58 8 8s-3.58 8-8 8h-2c-2.21 0-4 1.79-4 4v6"
+              stroke="url(#logoGrad)"
+              strokeWidth="3.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              fill="none"
+            />
+            <circle cx="32" cy="49" r="2.5" fill="url(#logoGrad)" />
+          </svg>
         </motion.div>
 
         <h1 style={{ marginTop: 4 }}>CincoQuiz</h1>

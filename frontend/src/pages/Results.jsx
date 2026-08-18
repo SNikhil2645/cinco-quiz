@@ -16,7 +16,7 @@ export default function Results() {
   const podium = leaderboard.slice(0, 3);
 
   useEffect(() => {
-    const colors = ["#f87171", "#e2895a", "#fbbf24", "#4ade80", "#94a3b8", "#d97706"];
+    const colors = ["#ed1848", "#bc8168", "#edce2e", "#b7f915", "#76ff4c", "#254fd7"];
     const pieces = Array.from({ length: 50 }, (_, i) => ({
       id: i,
       left: Math.random() * 100,

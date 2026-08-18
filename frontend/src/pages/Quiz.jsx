@@ -470,7 +470,7 @@ export default function Quiz() {
               style={{
                 padding: 20,
                 borderRadius: 14,
-                background: "rgba(226, 137, 90, 0.08)",
+                background: "rgba(188, 129, 104, 0.10)",
                 border: "1px solid var(--accent-primary)",
                 margin: "16px 0",
               }}
@@ -494,7 +494,7 @@ export default function Quiz() {
               style={{
                 padding: 16,
                 borderRadius: 14,
-                background: game.isCorrect ? "rgba(74, 222, 128, 0.1)" : "rgba(248, 113, 113, 0.1)",
+                background: game.isCorrect ? "rgba(183, 249, 21, 0.08)" : "rgba(237, 24, 72, 0.08)",
                 border: `1px solid ${game.isCorrect ? "var(--correct-green)" : "var(--wrong-red)"}`,
                 marginTop: 12,
               }}

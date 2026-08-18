@@ -84,8 +84,8 @@ export default function HostLobby() {
           <div style={{
             padding: "8px 16px",
             borderRadius: 10,
-            background: "rgba(226, 137, 90, 0.1)",
-            border: "1px solid rgba(226, 137, 90, 0.25)",
+            background: "rgba(188, 129, 104, 0.10)",
+            border: "1px solid rgba(188, 129, 104, 0.25)",
             fontSize: 13,
             fontWeight: 600,
             marginBottom: 12,

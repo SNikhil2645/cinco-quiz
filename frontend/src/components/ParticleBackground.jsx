@@ -13,11 +13,11 @@ export default function ParticleBackground() {
     const isMobile = window.innerWidth < 768;
 
     const PALETTE = {
-      accent: [226, 137, 90],
-      indigo: [129, 140, 248],
-      purple: [168, 85, 247],
-      sky: [56, 189, 248],
-      soft: [203, 213, 225],
+      primary: [188, 129, 104],
+      iron: [118, 255, 76],
+      info: [37, 79, 215],
+      caution: [237, 206, 46],
+      danger: [237, 24, 72],
     };
 
     const mouse = { x: -9999, y: -9999, tx: -9999, ty: -9999 };
@@ -41,7 +41,7 @@ export default function ParticleBackground() {
         cr: c[0],
         cg: c[1],
         cb: c[2],
-        alpha: Math.random() * 0.22 + 0.08,
+        alpha: Math.random() * 0.14 + 0.04,
         shape: Math.random() > 0.6 ? "diamond" : "circle",
         bobSpeed: Math.random() * 1.5 + 0.5,
         bobAmp: Math.random() * 8 + 3,
@@ -53,14 +53,14 @@ export default function ParticleBackground() {
     function makeGeoShape(layer) {
       const shapes = ["hexagon", "triangle", "ring", "pill"];
       const shape = shapes[Math.floor(Math.random() * shapes.length)];
-      const colorKeys = ["accent", "indigo", "purple", "sky", "soft"];
+      const colorKeys = ["primary", "iron", "info", "caution", "danger"];
       const ck = colorKeys[Math.floor(Math.random() * colorKeys.length)];
       const c = PALETTE[ck];
       const scale = layer === 0 ? 2.5 + Math.random() * 1.5 : 1 + Math.random() * 0.8;
       const alpha =
         layer === 0
-          ? Math.random() * 0.06 + 0.03
-          : Math.random() * 0.1 + 0.05;
+          ? Math.random() * 0.04 + 0.02
+          : Math.random() * 0.07 + 0.03;
       return {
         x: Math.random() * w,
         y: Math.random() * h,
@@ -195,9 +195,9 @@ export default function ParticleBackground() {
       const cursorGlow = mouse.x > -9000;
       if (cursorGlow) {
         const grad = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 320);
-        grad.addColorStop(0, "rgba(168,85,247,0.07)");
-        grad.addColorStop(0.35, "rgba(129,140,248,0.04)");
-        grad.addColorStop(0.7, "rgba(226,137,90,0.02)");
+        grad.addColorStop(0, "rgba(188,129,104,0.06)");
+        grad.addColorStop(0.35, "rgba(118,255,76,0.03)");
+        grad.addColorStop(0.7, "rgba(37,79,215,0.02)");
         grad.addColorStop(1, "rgba(0,0,0,0)");
         ctx.fillStyle = grad;
         ctx.fillRect(0, 0, w, h);
