@@ -14,10 +14,10 @@ export default function ParticleBackground() {
 
     const PALETTE = {
       accent: [226, 137, 90],
-      slate: [100, 116, 139],
-      amber: [245, 158, 11],
+      indigo: [129, 140, 248],
+      purple: [168, 85, 247],
+      sky: [56, 189, 248],
       soft: [203, 213, 225],
-      indigo: [99, 102, 241],
     };
 
     const mouse = { x: -9999, y: -9999, tx: -9999, ty: -9999 };
@@ -53,7 +53,7 @@ export default function ParticleBackground() {
     function makeGeoShape(layer) {
       const shapes = ["hexagon", "triangle", "ring", "pill"];
       const shape = shapes[Math.floor(Math.random() * shapes.length)];
-      const colorKeys = ["accent", "slate", "amber", "soft", "indigo"];
+      const colorKeys = ["accent", "indigo", "purple", "sky", "soft"];
       const ck = colorKeys[Math.floor(Math.random() * colorKeys.length)];
       const c = PALETTE[ck];
       const scale = layer === 0 ? 2.5 + Math.random() * 1.5 : 1 + Math.random() * 0.8;
@@ -195,8 +195,9 @@ export default function ParticleBackground() {
       const cursorGlow = mouse.x > -9000;
       if (cursorGlow) {
         const grad = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 320);
-        grad.addColorStop(0, "rgba(226,137,90,0.04)");
-        grad.addColorStop(0.4, "rgba(99,102,241,0.02)");
+        grad.addColorStop(0, "rgba(168,85,247,0.07)");
+        grad.addColorStop(0.35, "rgba(129,140,248,0.04)");
+        grad.addColorStop(0.7, "rgba(226,137,90,0.02)");
         grad.addColorStop(1, "rgba(0,0,0,0)");
         ctx.fillStyle = grad;
         ctx.fillRect(0, 0, w, h);

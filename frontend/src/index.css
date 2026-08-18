@@ -7,17 +7,18 @@
 }
 
 :root {
-  --bg-gradient: linear-gradient(160deg, #0b0e1a 0%, #111827 35%, #0f1d32 60%, #141b2d 100%);
-  --bg-mesh-1: radial-gradient(ellipse 60% 50% at 15% 20%, rgba(226, 137, 90, 0.07) 0%, transparent 70%);
-  --bg-mesh-2: radial-gradient(ellipse 50% 60% at 85% 75%, rgba(99, 102, 241, 0.06) 0%, transparent 70%);
-  --bg-mesh-3: radial-gradient(ellipse 40% 40% at 50% 50%, rgba(245, 158, 11, 0.04) 0%, transparent 60%);
-  --glass-bg: rgba(255, 255, 255, 0.05);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  --bg-gradient: linear-gradient(155deg, #060918 0%, #0c1445 30%, #12103c 55%, #0a1628 80%, #060918 100%);
+  --bg-mesh-1: radial-gradient(ellipse 55% 55% at 10% 15%, rgba(226, 137, 90, 0.18) 0%, transparent 65%);
+  --bg-mesh-2: radial-gradient(ellipse 50% 65% at 90% 80%, rgba(99, 102, 241, 0.20) 0%, transparent 65%);
+  --bg-mesh-3: radial-gradient(ellipse 45% 45% at 50% 45%, rgba(168, 85, 247, 0.10) 0%, transparent 60%);
+  --bg-mesh-4: radial-gradient(ellipse 35% 35% at 30% 80%, rgba(14, 165, 233, 0.08) 0%, transparent 55%);
+  --glass-bg: rgba(255, 255, 255, 0.06);
+  --glass-border: rgba(255, 255, 255, 0.10);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.40);
   --accent-primary: #e2895a;
   --accent-primary-soft: rgba(226, 137, 90, 0.15);
-  --accent-gradient: linear-gradient(135deg, #e2895a, #c9784a);
-  --accent-gradient-soft: linear-gradient(135deg, rgba(226, 137, 90, 0.2), rgba(201, 120, 74, 0.2));
+  --accent-gradient: linear-gradient(135deg, #a855f7, #e2895a);
+  --accent-gradient-soft: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(226, 137, 90, 0.2));
   --text-primary: #f1f5f9;
   --text-secondary: rgba(241, 245, 249, 0.6);
   --correct-green: #4ade80;
@@ -25,9 +26,9 @@
   --gold: #f59e0b;
   --silver: #94a3b8;
   --bronze: #d97706;
-  --surface-subtle: rgba(255, 255, 255, 0.04);
-  --surface-hover: rgba(255, 255, 255, 0.08);
-  --border-subtle: rgba(255, 255, 255, 0.08);
+  --surface-subtle: rgba(255, 255, 255, 0.05);
+  --surface-hover: rgba(255, 255, 255, 0.10);
+  --border-subtle: rgba(255, 255, 255, 0.10);
 }
 
 html {
@@ -56,7 +57,7 @@ body {
   content: "";
   position: fixed;
   inset: 0;
-  background: var(--bg-mesh-1), var(--bg-mesh-2), var(--bg-mesh-3);
+  background: var(--bg-mesh-1), var(--bg-mesh-2), var(--bg-mesh-3), var(--bg-mesh-4);
   pointer-events: none;
   z-index: 0;
 }
@@ -95,11 +96,11 @@ body {
   max-width: min(550px, calc(100vw - 24px));
   padding: clamp(20px, 4vw, 40px);
   border-radius: clamp(16px, 3vw, 25px);
-  background: var(--glass-bg);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.055);
+  backdrop-filter: blur(24px) saturate(1.2);
+  -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.40), inset 0 1px 0 rgba(255, 255, 255, 0.06);
   text-align: center;
   margin: auto;
   flex-shrink: 0;
@@ -109,7 +110,7 @@ h1 {
   font-size: clamp(32px, 7vw, 48px);
   font-weight: 900;
   margin-bottom: 12px;
-  background: linear-gradient(135deg, #f1f5f9, var(--accent-primary));
+  background: linear-gradient(135deg, #f8fafc, var(--accent-primary), #a78bfa);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -186,7 +187,7 @@ button:disabled {
 }
 
 .btn-primary:hover {
-  box-shadow: 0 4px 20px rgba(226, 137, 90, 0.3);
+  box-shadow: 0 4px 24px rgba(168, 85, 247, 0.3), 0 2px 8px rgba(226, 137, 90, 0.2);
 }
 
 .btn-danger {
@@ -218,7 +219,7 @@ input, select {
 
 input:focus, select:focus {
   border-color: var(--accent-primary);
-  box-shadow: 0 0 0 3px rgba(226, 137, 90, 0.12);
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.12);
 }
 
 input::placeholder {

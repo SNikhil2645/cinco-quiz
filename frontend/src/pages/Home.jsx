@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Trophy, Zap, Users, Brain, BarChart3, ArrowRight } from "lucide-react";
+import { Trophy, Zap, Users, BarChart3 } from "lucide-react";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -22,14 +22,29 @@ export default function Home() {
           <div style={{
             width: 80,
             height: 80,
-            borderRadius: 20,
-            background: "var(--accent-gradient)",
+            borderRadius: 22,
+            background: "linear-gradient(135deg, #a855f7, #e2895a)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            boxShadow: "0 4px 20px rgba(226, 137, 90, 0.2)",
+            boxShadow: "0 6px 28px rgba(168, 85, 247, 0.30), 0 2px 8px rgba(226, 137, 90, 0.20)",
+            position: "relative",
           }}>
-            <Brain size={44} color="#fff" strokeWidth={2} />
+            <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
+              <path
+                d="M22 4C12.06 4 4 12.06 4 22s8.06 18 18 18 18-8.06 18-18S31.94 4 22 4z"
+                fill="none"
+              />
+              <path
+                d="M17 15.5C17 12.46 19.46 10 22.5 10H24c2.76 0 5 2.24 5 5s-2.24 5-5 5h-1.5c-1.38 0-2.5 1.12-2.5 2.5V28"
+                stroke="white"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                fill="none"
+              />
+              <circle cx="22" cy="33" r="2" fill="white" />
+            </svg>
           </div>
         </motion.div>
 
