@@ -16,233 +16,261 @@ export default function DecorativeBackground() {
       }}
       aria-hidden="true"
     >
-      {/* 1 — Large circle outline, top-left */}
+      {/* ===== SOLID SPHERES — glossy radial gradients ===== */}
+
+      {/* 1 — Large sphere, top-left */}
       <div style={{
-        position: "absolute", top: "4%", left: "3%",
-        width: 120, height: 120, borderRadius: "50%",
-        border: `2px solid ${euc}0.25)`,
-        background: "none",
-      }} />
-
-      {/* 2 — Small solid circle, top-right */}
-      <div style={{
-        position: "absolute", top: "7%", right: "8%",
-        width: 36, height: 36, borderRadius: "50%",
-        background: `${peach}0.18)`,
-        border: `1.5px solid ${peach}0.35)`,
-      }} />
-
-      {/* 3 — Medium circle outline, bottom-left */}
-      <div style={{
-        position: "absolute", bottom: "12%", left: "6%",
-        width: 80, height: 80, borderRadius: "50%",
-        border: `2px solid ${pist}0.30)`,
-        background: "none",
-      }} />
-
-      {/* 4 — Tiny dot, center-right */}
-      <div style={{
-        position: "absolute", top: "35%", right: "5%",
-        width: 14, height: 14, borderRadius: "50%",
-        background: `${clay}0.30)`,
-      }} />
-
-      {/* 5 — Small circle, top-center */}
-      <div style={{
-        position: "absolute", top: "3%", left: "42%",
-        width: 22, height: 22, borderRadius: "50%",
-        background: `${ivory}0.22)`,
-        border: `1px solid ${ivory}0.38)`,
-      }} />
-
-      {/* 6 — Large circle outline, bottom-right */}
-      <div style={{
-        position: "absolute", bottom: "6%", right: "4%",
-        width: 140, height: 140, borderRadius: "50%",
-        border: `2px solid ${peach}0.18)`,
-        background: "none",
-      }} />
-
-      {/* 7 — Sphere (gradient fill), top-left quadrant */}
-      <div style={{
-        position: "absolute", top: "22%", left: "12%",
-        width: 52, height: 52, borderRadius: "50%",
-        background: `radial-gradient(circle at 35% 35%, rgba(255,255,255,0.55), ${euc}0.30) 60%, ${euc}0.10))`,
-        border: `1.5px solid ${euc}0.40)`,
-      }} />
-
-      {/* 8 — Hexagon (clip-path), center area */}
-      <div style={{
-        position: "absolute", top: "48%", left: "46%",
-        width: 50, height: 50,
-        clipPath: "polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%)",
-        background: `${pist}0.22)`,
-        border: `1px solid ${pist}0.40)`,
-        filter: "drop-shadow(0 0 1px rgba(235,236,204,0.3))",
-      }} />
-
-      {/* 9 — Capsule, right side */}
-      <div style={{
-        position: "absolute", top: "58%", right: "10%",
-        width: 64, height: 24, borderRadius: 12,
-        background: `linear-gradient(180deg, rgba(255,255,255,0.32), ${clay}0.14))`,
-        border: `1.5px solid ${clay}0.32)`,
-        transform: "rotate(-15deg)",
-      }} />
-
-      {/* 10 — Dot grid (4×4), top-left area */}
-      <div style={{ position: "absolute", top: "14%", left: "28%", display: "grid", gridTemplateColumns: "repeat(4, 8px)", gap: 10 }}>
-        {[...Array(16)].map((_, i) => (
-          <div key={i} style={{ width: 4, height: 4, borderRadius: "50%", background: `${euc}0.28)` }} />
-        ))}
-      </div>
-
-      {/* 11 — Dot grid (3×3), bottom-right area */}
-      <div style={{ position: "absolute", bottom: "22%", right: "14%", display: "grid", gridTemplateColumns: "repeat(3, 7px)", gap: 9 }}>
-        {[...Array(9)].map((_, i) => (
-          <div key={i} style={{ width: 4, height: 4, borderRadius: "50%", background: `${peach}0.26)` }} />
-        ))}
-      </div>
-
-      {/* 12 — Small dot cluster, center-left */}
-      <div style={{ position: "absolute", top: "60%", left: "8%", display: "flex", gap: 6, flexWrap: "wrap", width: 28 }}>
-        {[...Array(6)].map((_, i) => (
-          <div key={i} style={{ width: 5, height: 5, borderRadius: "50%", background: `${pist}0.30)` }} />
-        ))}
-      </div>
-
-      {/* 13 — Tiny scattered dots, top-right */}
-      <div style={{ position: "absolute", top: "18%", right: "18%", display: "flex", gap: 7, flexWrap: "wrap", width: 24 }}>
-        {[...Array(4)].map((_, i) => (
-          <div key={i} style={{ width: 3, height: 3, borderRadius: "50%", background: `${clay}0.28)` }} />
-        ))}
-      </div>
-
-      {/* 14 — Sphere (gradient fill), bottom-left */}
-      <div style={{
-        position: "absolute", bottom: "28%", left: "18%",
-        width: 42, height: 42, borderRadius: "50%",
-        background: `radial-gradient(circle at 35% 35%, rgba(255,255,255,0.50), ${peach}0.28) 55%, ${peach}0.08))`,
-        border: `1.5px solid ${peach}0.38)`,
-      }} />
-
-      {/* 15 — Hexagon (clip-path), top-right */}
-      <div style={{
-        position: "absolute", top: "30%", right: "20%",
-        width: 38, height: 38,
-        clipPath: "polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%)",
-        background: `${clay}0.20)`,
-        border: `1px solid ${clay}0.38)`,
-        filter: "drop-shadow(0 0 1px rgba(220,162,120,0.25))",
-      }} />
-
-      {/* 16 — Capsule, left side */}
-      <div style={{
-        position: "absolute", top: "72%", left: "30%",
-        width: 52, height: 20, borderRadius: 10,
-        background: `linear-gradient(180deg, rgba(255,255,255,0.30), ${euc}0.12))`,
-        border: `1.5px solid ${euc}0.28)`,
-        transform: "rotate(20deg)",
-      }} />
-
-      {/* 17 — Curved arc (top-right) */}
-      <svg
-        style={{ position: "absolute", top: "10%", right: "2%", opacity: 0.18 }}
-        width="100" height="100" viewBox="0 0 100 100"
-      >
-        <path d="M10,90 Q50,-10 90,50" fill="none" stroke={clay.slice(0, -1) + ",0.35)"} strokeWidth="2" />
-      </svg>
-
-      {/* 18 — Curved arc (bottom-left) */}
-      <svg
-        style={{ position: "absolute", bottom: "15%", left: "2%", opacity: 0.16 }}
-        width="80" height="80" viewBox="0 0 80 80"
-      >
-        <path d="M5,10 Q40,80 75,20" fill="none" stroke={euc.slice(0, -1) + ",0.32)"} strokeWidth="2" />
-      </svg>
-
-      {/* 19 — Sphere, center-right */}
-      <div style={{
-        position: "absolute", top: "42%", right: "3%",
-        width: 30, height: 30, borderRadius: "50%",
-        background: `radial-gradient(circle at 35% 35%, rgba(255,255,255,0.50), ${pist}0.25) 55%, ${pist}0.08))`,
-        border: `1px solid ${pist}0.35)`,
-      }} />
-
-      {/* 20 — Hexagon, bottom-center */}
-      <div style={{
-        position: "absolute", bottom: "8%", left: "42%",
-        width: 34, height: 34,
-        clipPath: "polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%)",
-        background: `${euc}0.20)`,
-        filter: "drop-shadow(0 0 1px rgba(205,212,177,0.25))",
-      }} />
-
-      {/* 21 — Dot, top-left of center */}
-      <div style={{
-        position: "absolute", top: "28%", left: "38%",
-        width: 10, height: 10, borderRadius: "50%",
-        background: `${pist}0.28)`,
-      }} />
-
-      {/* 22 — Large circle outline, center-left */}
-      <div style={{
-        position: "absolute", top: "50%", left: "2%",
+        position: "absolute", top: "8%", left: "5%",
         width: 70, height: 70, borderRadius: "50%",
-        border: `1.5px solid ${peach}0.20)`,
+        background: `radial-gradient(circle at 32% 28%, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.30) 22%, ${euc}0.55) 50%, ${euc}0.25) 80%, ${euc}0.08) 100%)`,
+        border: `1.5px solid ${euc}0.55)`,
+        boxShadow: `inset 0 -4px 8px ${euc}0.15), 0 2px 8px ${euc}0.12)`,
+      }} />
+
+      {/* 2 — Medium sphere, center-left */}
+      <div style={{
+        position: "absolute", top: "38%", left: "10%",
+        width: 52, height: 52, borderRadius: "50%",
+        background: `radial-gradient(circle at 30% 26%, rgba(255,255,255,0.80) 0%, rgba(255,255,255,0.25) 24%, ${peach}0.50) 52%, ${peach}0.20) 82%, ${peach}0.06) 100%)`,
+        border: `1.5px solid ${peach}0.50)`,
+        boxShadow: `inset 0 -3px 6px ${peach}0.12), 0 2px 6px ${peach}0.10)`,
+      }} />
+
+      {/* 3 — Small sphere, top-right */}
+      <div style={{
+        position: "absolute", top: "12%", right: "12%",
+        width: 38, height: 38, borderRadius: "50%",
+        background: `radial-gradient(circle at 32% 28%, rgba(255,255,255,0.82) 0%, rgba(255,255,255,0.28) 22%, ${clay}0.48) 50%, ${clay}0.18) 80%, ${clay}0.05) 100%)`,
+        border: `1.2px solid ${clay}0.45)`,
+        boxShadow: `inset 0 -2px 5px ${clay}0.10), 0 1px 5px ${clay}0.08)`,
+      }} />
+
+      {/* 4 — Small sphere, bottom-left */}
+      <div style={{
+        position: "absolute", bottom: "22%", left: "16%",
+        width: 44, height: 44, borderRadius: "50%",
+        background: `radial-gradient(circle at 30% 26%, rgba(255,255,255,0.78) 0%, rgba(255,255,255,0.22) 25%, ${pist}0.48) 52%, ${pist}0.18) 82%, ${pist}0.05) 100%)`,
+        border: `1.2px solid ${pist}0.48)`,
+        boxShadow: `inset 0 -3px 6px ${pist}0.10), 0 2px 6px ${pist}0.08)`,
+      }} />
+
+      {/* 5 — Tiny sphere, center-right */}
+      <div style={{
+        position: "absolute", top: "52%", right: "6%",
+        width: 28, height: 28, borderRadius: "50%",
+        background: `radial-gradient(circle at 32% 28%, rgba(255,255,255,0.80) 0%, rgba(255,255,255,0.25) 24%, ${euc}0.45) 52%, ${euc}0.15) 82%, transparent 100%)`,
+        border: `1px solid ${euc}0.40)`,
+      }} />
+
+      {/* 6 — Sphere, bottom-right */}
+      <div style={{
+        position: "absolute", bottom: "14%", right: "18%",
+        width: 34, height: 34, borderRadius: "50%",
+        background: `radial-gradient(circle at 30% 26%, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0.20) 25%, ${clay}0.42) 52%, ${clay}0.12) 82%, transparent 100%)`,
+        border: `1px solid ${clay}0.38)`,
+      }} />
+
+      {/* ===== HEXAGONS — filled + outline variants ===== */}
+
+      {/* 7 — Hexagon filled, center */}
+      <div style={{
+        position: "absolute", top: "46%", left: "44%",
+        width: 54, height: 54,
+        clipPath: "polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%)",
+        background: `linear-gradient(160deg, ${pist}0.45), ${euc}0.25))`,
+        filter: "drop-shadow(0 0 2px rgba(235,236,204,0.35))",
+      }} />
+
+      {/* 8 — Hexagon outline, top-right */}
+      <svg
+        style={{ position: "absolute", top: "24%", right: "22%", opacity: 0.30 }}
+        width="46" height="46" viewBox="0 0 46 46"
+      >
+        <polygon
+          points="23,1 42.5,12 42.5,34 23,45 3.5,34 3.5,12"
+          fill="none"
+          stroke={clay.slice(0, -1) + ",0.60)"}
+          strokeWidth="1.5"
+        />
+      </svg>
+
+      {/* 9 — Hexagon filled, bottom-center */}
+      <div style={{
+        position: "absolute", bottom: "10%", left: "40%",
+        width: 40, height: 40,
+        clipPath: "polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%)",
+        background: `linear-gradient(160deg, ${euc}0.40), ${peach}0.18))`,
+        filter: "drop-shadow(0 0 2px rgba(205,212,177,0.30))",
+      }} />
+
+      {/* 10 — Hexagon outline, left side */}
+      <svg
+        style={{ position: "absolute", top: "62%", left: "3%", opacity: 0.25 }}
+        width="38" height="38" viewBox="0 0 38 38"
+      >
+        <polygon
+          points="19,1 35,10 35,28 19,37 3,28 3,10"
+          fill="none"
+          stroke={peach.slice(0, -1) + ",0.55)"}
+          strokeWidth="1.5"
+        />
+      </svg>
+
+      {/* ===== CIRCLE OUTLINES — 15-35% opacity ===== */}
+
+      {/* 11 — Large circle outline, top-right */}
+      <div style={{
+        position: "absolute", top: "3%", right: "4%",
+        width: 130, height: 130, borderRadius: "50%",
+        border: `2px solid ${peach}0.28)`,
         background: "none",
       }} />
 
-      {/* 23 — Dot grid (2×4), bottom-left area */}
-      <div style={{ position: "absolute", bottom: "30%", left: "40%", display: "grid", gridTemplateColumns: "repeat(4, 6px)", gap: 8 }}>
-        {[...Array(8)].map((_, i) => (
-          <div key={i} style={{ width: 3, height: 3, borderRadius: "50%", background: `${clay}0.22)` }} />
+      {/* 12 — Medium circle outline, bottom-right */}
+      <div style={{
+        position: "absolute", bottom: "8%", right: "3%",
+        width: 100, height: 100, borderRadius: "50%",
+        border: `2px solid ${euc}0.22)`,
+        background: "none",
+      }} />
+
+      {/* 13 — Small circle outline, center-left */}
+      <div style={{
+        position: "absolute", top: "55%", left: "2%",
+        width: 60, height: 60, borderRadius: "50%",
+        border: `1.5px solid ${pist}0.30)`,
+        background: "none",
+      }} />
+
+      {/* ===== CIRCLE FILLS — solid at 70-95% ===== */}
+
+      {/* 14 — Small solid dot, top-center */}
+      <div style={{
+        position: "absolute", top: "4%", left: "50%",
+        width: 18, height: 18, borderRadius: "50%",
+        background: `${ivory}0.35)`,
+        border: `1px solid ${ivory}0.45)`,
+      }} />
+
+      {/* 15 — Solid dot, center-right */}
+      <div style={{
+        position: "absolute", top: "32%", right: "7%",
+        width: 14, height: 14, borderRadius: "50%",
+        background: `${clay}0.35)`,
+      }} />
+
+      {/* ===== CAPSULES ===== */}
+
+      {/* 16 — Capsule right */}
+      <div style={{
+        position: "absolute", top: "70%", right: "8%",
+        width: 60, height: 22, borderRadius: 11,
+        background: `linear-gradient(180deg, rgba(255,255,255,0.45), ${clay}0.22))`,
+        border: `1.5px solid ${clay}0.38)`,
+        transform: "rotate(-18deg)",
+      }} />
+
+      {/* 17 — Capsule left */}
+      <div style={{
+        position: "absolute", top: "20%", left: "30%",
+        width: 50, height: 18, borderRadius: 9,
+        background: `linear-gradient(180deg, rgba(255,255,255,0.40), ${euc}0.18))`,
+        border: `1.2px solid ${euc}0.32)`,
+        transform: "rotate(30deg)",
+      }} />
+
+      {/* ===== DOT-GRID CLUSTERS — loose 6x4 white dots in corners ===== */}
+
+      {/* 18 — Dot grid top-left (6 columns x 4 rows) */}
+      <div style={{ position: "absolute", top: "6%", left: "18%", display: "grid", gridTemplateColumns: "repeat(6, 5px)", gap: 9 }}>
+        {[...Array(24)].map((_, i) => (
+          <div key={i} style={{ width: 4, height: 4, borderRadius: "50%", background: `rgba(255,255,255,0.40)` }} />
         ))}
       </div>
 
-      {/* 24 — Capsule, top-center */}
-      <div style={{
-        position: "absolute", top: "5%", left: "58%",
-        width: 46, height: 18, borderRadius: 9,
-        background: `linear-gradient(180deg, rgba(255,255,255,0.28), ${pist}0.12))`,
-        border: `1px solid ${pist}0.28)`,
-        transform: "rotate(35deg)",
-      }} />
+      {/* 19 — Dot grid bottom-right (6 columns x 4 rows) */}
+      <div style={{ position: "absolute", bottom: "8%", right: "10%", display: "grid", gridTemplateColumns: "repeat(6, 5px)", gap: 9 }}>
+        {[...Array(24)].map((_, i) => (
+          <div key={i} style={{ width: 4, height: 4, borderRadius: "50%", background: `rgba(255,255,255,0.35)` }} />
+        ))}
+      </div>
 
-      {/* 25 — Small sphere, bottom-right */}
-      <div style={{
-        position: "absolute", bottom: "18%", right: "22%",
-        width: 24, height: 24, borderRadius: "50%",
-        background: `radial-gradient(circle at 35% 35%, rgba(255,255,255,0.48), ${clay}0.22) 55%, ${clay}0.06))`,
-        border: `1px solid ${clay}0.30)`,
-      }} />
+      {/* 20 — Dot grid top-right (4x3) */}
+      <div style={{ position: "absolute", top: "16%", right: "6%", display: "grid", gridTemplateColumns: "repeat(4, 5px)", gap: 8 }}>
+        {[...Array(12)].map((_, i) => (
+          <div key={i} style={{ width: 3.5, height: 3.5, borderRadius: "50%", background: `rgba(255,255,255,0.30)` }} />
+        ))}
+      </div>
 
-      {/* 26 — Isometric 3D cube, bottom-right */}
+      {/* 21 — Dot grid bottom-left (5x3) */}
+      <div style={{ position: "absolute", bottom: "18%", left: "8%", display: "grid", gridTemplateColumns: "repeat(5, 5px)", gap: 8 }}>
+        {[...Array(15)].map((_, i) => (
+          <div key={i} style={{ width: 3.5, height: 3.5, borderRadius: "50%", background: `rgba(255,255,255,0.32)` }} />
+        ))}
+      </div>
+
+      {/* ===== SCATTERED DOTS ===== */}
+
+      {/* 22 — Dot cluster, center-left */}
+      <div style={{ position: "absolute", top: "44%", left: "6%", display: "flex", gap: 7, flexWrap: "wrap", width: 26 }}>
+        {[...Array(6)].map((_, i) => (
+          <div key={i} style={{ width: 5, height: 5, borderRadius: "50%", background: `${pist}0.35)` }} />
+        ))}
+      </div>
+
+      {/* 23 — Scattered dots, bottom-center */}
+      <div style={{ position: "absolute", bottom: "28%", left: "48%", display: "flex", gap: 8, flexWrap: "wrap", width: 28 }}>
+        {[...Array(5)].map((_, i) => (
+          <div key={i} style={{ width: 4, height: 4, borderRadius: "50%", background: `${clay}0.30)` }} />
+        ))}
+      </div>
+
+      {/* ===== CURVED ARCS ===== */}
+
+      {/* 24 — Arc top-right */}
+      <svg
+        style={{ position: "absolute", top: "2%", right: "1%", opacity: 0.22 }}
+        width="110" height="110" viewBox="0 0 110 110"
+      >
+        <path d="M10,100 Q55,-20 100,55" fill="none" stroke={clay.slice(0, -1) + ",0.40)"} strokeWidth="2" />
+      </svg>
+
+      {/* 25 — Arc bottom-left */}
+      <svg
+        style={{ position: "absolute", bottom: "12%", left: "1%", opacity: 0.20 }}
+        width="90" height="90" viewBox="0 0 90 90"
+      >
+        <path d="M5,15 Q45,85 85,25" fill="none" stroke={euc.slice(0, -1) + ",0.38)"} strokeWidth="2" />
+      </svg>
+
+      {/* ===== ISOMETRIC 3D CUBE — 3 distinct shaded faces ===== */}
+
+      {/* 26 — Isometric cube, bottom-right */}
       <div style={{
-        position: "absolute", bottom: "35%", right: "8%",
-        width: 36, height: 36,
-        transform: "rotateX(55deg) rotateZ(-45deg)",
+        position: "absolute", bottom: "32%", right: "10%",
+        width: 44, height: 44,
         transformStyle: "preserve-3d",
+        transform: "rotateX(55deg) rotateZ(-45deg)",
       }}>
-        {/* top face */}
+        {/* Top face — lightest */}
         <div style={{
           position: "absolute", width: "100%", height: "100%",
-          background: `${euc}0.22)`,
-          border: `1px solid ${euc}0.38)`,
-          transform: "translateZ(18px)",
+          background: `linear-gradient(135deg, ${euc}0.50), ${euc}0.30))`,
+          border: `1px solid ${euc}0.50)`,
+          transform: "translateZ(22px)",
         }} />
-        {/* front face */}
+        {/* Front face — medium */}
         <div style={{
           position: "absolute", width: "100%", height: "100%",
-          background: `${pist}0.16)`,
-          border: `1px solid ${pist}0.30)`,
+          background: `linear-gradient(180deg, ${pist}0.38), ${pist}0.18))`,
+          border: `1px solid ${pist}0.40)`,
         }} />
-        {/* right face */}
+        {/* Right face — darkest */}
         <div style={{
           position: "absolute", width: "100%", height: "100%",
-          background: `${peach}0.14)`,
-          border: `1px solid ${peach}0.26)`,
-          transform: "rotateY(90deg) translateZ(18px)",
+          background: `linear-gradient(135deg, ${peach}0.35), ${peach}0.15))`,
+          border: `1px solid ${peach}0.35)`,
+          transform: "rotateY(90deg) translateZ(22px)",
         }} />
       </div>
     </div>

@@ -7,9 +7,9 @@ import useGameStore from "../store/gameStore";
 import socket from "../socket/service";
 
 function RankIcon({ i }) {
-  if (i === 0) return <Medal size={18} color="#fbbf24" />;
-  if (i === 1) return <Medal size={18} color="#94a3b8" />;
-  if (i === 2) return <Medal size={18} color="#d97706" />;
+  if (i === 0) return <Medal size={18} color="#DCA278" />;
+  if (i === 1) return <Medal size={18} color="#B8AFA5" />;
+  if (i === 2) return <Medal size={18} color="#CDD4B1" />;
   return <span style={{ fontSize: 13, fontWeight: 700, opacity: 0.5 }}>#{i + 1}</span>;
 }
 

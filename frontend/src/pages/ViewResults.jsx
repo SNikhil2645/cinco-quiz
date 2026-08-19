@@ -73,7 +73,7 @@ export default function ViewResults() {
               results.players.map((p, i) => (
                 <div className={`leaderboard-row ${i === 0 ? "rank-1" : ""}`} key={i}>
                   <span className="leaderboard-rank">
-                    {i === 0 ? <Medal size={18} color="#fbbf24" /> : i === 1 ? <Medal size={18} color="#94a3b8" /> : i === 2 ? <Medal size={18} color="#d97706" /> : `#${i + 1}`}
+                    {i === 0 ? <Medal size={18} color="#DCA278" /> : i === 1 ? <Medal size={18} color="#B8AFA5" /> : i === 2 ? <Medal size={18} color="#CDD4B1" /> : `#${i + 1}`}
                   </span>
                   <span className="leaderboard-name">{p.username}</span>
                   <span className="leaderboard-score">{p.score}</span>
@@ -86,7 +86,7 @@ export default function ViewResults() {
         )}
 
         <button onClick={() => navigate("/")} className="btn-small" style={{ marginTop: 20, width: "auto", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
-          <ArrowLeft size={14} /> Back to Home
+          <ArrowLeft size={14} color="#6B6558" /> Back to Home
         </button>
       </motion.div>
     </div>

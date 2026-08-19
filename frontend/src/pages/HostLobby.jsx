@@ -120,7 +120,7 @@ export default function HostLobby() {
           {players.map((p, i) => (
             <div className="player-item" key={i}>
               <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                {p.isHost ? <Crown size={15} color="var(--accent-primary)" /> : <User size={15} />}
+                {p.isHost ? <Crown size={15} color="var(--accent-primary)" /> : <User size={15} color="#8A8072" />}
                 {p.username}
               </span>
               {p.isHost && p.isSpectating && <span style={{ fontSize: 11, color: "var(--accent-primary)", display: "flex", alignItems: "center", gap: 4 }}><Eye size={12} /> SPECTATING</span>}

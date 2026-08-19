@@ -70,7 +70,7 @@ export default function PlayerLobby() {
           {players.map((p, i) => (
             <div className="player-item" key={i}>
               <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                {p.username === username ? <Gamepad2 size={15} color="var(--accent-primary)" /> : <User size={15} />}
+                {p.username === username ? <Gamepad2 size={15} color="var(--accent-primary)" /> : <User size={15} color="#8A8072" />}
                 {p.username}
                 {p.username === username ? " (You)" : ""}
               </span>

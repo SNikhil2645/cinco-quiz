@@ -74,7 +74,7 @@ export default function Results() {
                   animate={{ height: 120 }}
                   transition={{ delay: 0.6, duration: 0.5 }}
                 >
-                  <Medal size={24} color="#94a3b8" />
+                  <Medal size={24} color="#B8AFA5" />
                 </motion.div>
               </div>
             )}
@@ -88,7 +88,7 @@ export default function Results() {
                   animate={{ height: 160 }}
                   transition={{ delay: 0.4, duration: 0.5 }}
                 >
-                  <Medal size={28} color="#fbbf24" />
+                  <Medal size={28} color="#DCA278" />
                 </motion.div>
               </div>
             )}
@@ -102,7 +102,7 @@ export default function Results() {
                   animate={{ height: 90 }}
                   transition={{ delay: 0.8, duration: 0.5 }}
                 >
-                  <Medal size={22} color="#d97706" />
+                  <Medal size={22} color="#CDD4B1" />
                 </motion.div>
               </div>
             )}
@@ -147,7 +147,7 @@ export default function Results() {
                   style={p.username === username ? { border: "1px solid var(--accent-primary)" } : {}}
                 >
                   <span className="leaderboard-rank">
-                    {i === 0 ? <Medal size={18} color="#fbbf24" /> : i === 1 ? <Medal size={18} color="#94a3b8" /> : i === 2 ? <Medal size={18} color="#d97706" /> : `#${i + 1}`}
+                    {i === 0 ? <Medal size={18} color="#DCA278" /> : i === 1 ? <Medal size={18} color="#B8AFA5" /> : i === 2 ? <Medal size={18} color="#CDD4B1" /> : `#${i + 1}`}
                   </span>
                   <span className="leaderboard-name">
                     {p.username} {p.username === username ? "(You)" : ""}

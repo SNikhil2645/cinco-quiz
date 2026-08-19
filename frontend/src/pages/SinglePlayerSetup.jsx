@@ -103,8 +103,8 @@ export default function SinglePlayerSetup() {
           <Rocket size={18} /> Start Quiz
         </button>
 
-        <button onClick={() => navigate("/mode")} style={{ marginTop: 8, opacity: 0.6, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
-          <ArrowLeft size={16} /> Back
+        <button onClick={() => navigate("/mode")} style={{ marginTop: 8, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+          <ArrowLeft size={16} color="#6B6558" /> Back
         </button>
       </motion.div>
     </div>
