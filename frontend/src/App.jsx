@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import ParticleBackground from "./components/ParticleBackground";
+import DecorativeBackground from "./components/DecorativeBackground";
 import CardGlow from "./components/CardGlow";
 import Home from "./pages/Home";
 import ModeSelect from "./pages/ModeSelect";
@@ -16,7 +16,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <div className="app-bg">
-        <ParticleBackground />
+        <DecorativeBackground />
         <CardGlow />
         <Routes>
           <Route path="/" element={<Home />} />
