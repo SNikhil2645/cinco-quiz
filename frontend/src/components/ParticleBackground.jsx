@@ -13,11 +13,11 @@ export default function ParticleBackground() {
     const isMobile = window.innerWidth < 768;
 
     const PALETTE = {
-      primary: [188, 129, 104],
-      iron: [118, 255, 76],
-      info: [37, 79, 215],
-      caution: [237, 206, 46],
-      danger: [237, 24, 72],
+      primary: [254, 239, 234],
+      iron: [249, 229, 231],
+      info: [190, 201, 221],
+      caution: [134, 153, 167],
+      danger: [157, 169, 183],
     };
 
     const mouse = { x: -9999, y: -9999, tx: -9999, ty: -9999 };
@@ -195,9 +195,9 @@ export default function ParticleBackground() {
       const cursorGlow = mouse.x > -9000;
       if (cursorGlow) {
         const grad = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 320);
-        grad.addColorStop(0, "rgba(188,129,104,0.06)");
-        grad.addColorStop(0.35, "rgba(118,255,76,0.03)");
-        grad.addColorStop(0.7, "rgba(37,79,215,0.02)");
+        grad.addColorStop(0, "rgba(254,239,234,0.08)");
+        grad.addColorStop(0.35, "rgba(190,201,221,0.05)");
+        grad.addColorStop(0.7, "rgba(134,153,167,0.03)");
         grad.addColorStop(1, "rgba(0,0,0,0)");
         ctx.fillStyle = grad;
         ctx.fillRect(0, 0, w, h);
