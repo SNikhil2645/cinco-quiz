@@ -13,11 +13,11 @@ export default function ParticleBackground() {
     const isMobile = window.innerWidth < 768;
 
     const PALETTE = {
-      primary: [254, 239, 234],
-      iron: [249, 229, 231],
-      info: [190, 201, 221],
-      caution: [134, 153, 167],
-      danger: [157, 169, 183],
+      primary: [205, 212, 177],
+      secondary: [235, 236, 204],
+      accent: [220, 162, 120],
+      warm: [238, 204, 208],
+      ivory: [255, 249, 226],
     };
 
     const mouse = { x: -9999, y: -9999, tx: -9999, ty: -9999 };
@@ -35,16 +35,16 @@ export default function ParticleBackground() {
         y: Math.random() * h,
         baseX: 0,
         baseY: 0,
-        vx: (Math.random() - 0.5) * 0.4,
-        vy: (Math.random() - 0.5) * 0.4,
-        r: Math.random() * 2.5 + 0.8,
+        vx: (Math.random() - 0.5) * 0.35,
+        vy: (Math.random() - 0.5) * 0.35,
+        r: Math.random() * 3 + 1,
         cr: c[0],
         cg: c[1],
         cb: c[2],
-        alpha: Math.random() * 0.14 + 0.04,
+        alpha: Math.random() * 0.25 + 0.08,
         shape: Math.random() > 0.6 ? "diamond" : "circle",
-        bobSpeed: Math.random() * 1.5 + 0.5,
-        bobAmp: Math.random() * 8 + 3,
+        bobSpeed: Math.random() * 1.2 + 0.4,
+        bobAmp: Math.random() * 10 + 4,
         bobOffset: Math.random() * Math.PI * 2,
         layer: 2,
       };
@@ -53,21 +53,21 @@ export default function ParticleBackground() {
     function makeGeoShape(layer) {
       const shapes = ["hexagon", "triangle", "ring", "pill"];
       const shape = shapes[Math.floor(Math.random() * shapes.length)];
-      const colorKeys = ["primary", "iron", "info", "caution", "danger"];
+      const colorKeys = ["primary", "secondary", "accent", "warm"];
       const ck = colorKeys[Math.floor(Math.random() * colorKeys.length)];
       const c = PALETTE[ck];
-      const scale = layer === 0 ? 2.5 + Math.random() * 1.5 : 1 + Math.random() * 0.8;
+      const scale = layer === 0 ? 2.8 + Math.random() * 1.5 : 1.2 + Math.random() * 0.8;
       const alpha =
         layer === 0
-          ? Math.random() * 0.04 + 0.02
-          : Math.random() * 0.07 + 0.03;
+          ? Math.random() * 0.07 + 0.04
+          : Math.random() * 0.10 + 0.05;
       return {
         x: Math.random() * w,
         y: Math.random() * h,
-        vx: (Math.random() - 0.5) * (layer === 0 ? 0.12 : 0.2),
-        vy: (Math.random() - 0.5) * (layer === 0 ? 0.12 : 0.2),
+        vx: (Math.random() - 0.5) * (layer === 0 ? 0.10 : 0.16),
+        vy: (Math.random() - 0.5) * (layer === 0 ? 0.10 : 0.16),
         rotation: Math.random() * Math.PI * 2,
-        rotSpeed: (Math.random() - 0.5) * 0.008,
+        rotSpeed: (Math.random() - 0.5) * 0.006,
         scale,
         cr: c[0],
         cg: c[1],
@@ -75,26 +75,26 @@ export default function ParticleBackground() {
         alpha,
         shape,
         layer,
-        bobSpeed: Math.random() * 1 + 0.3,
-        bobAmp: Math.random() * 12 + 5,
+        bobSpeed: Math.random() * 0.8 + 0.3,
+        bobAmp: Math.random() * 14 + 6,
         bobOffset: Math.random() * Math.PI * 2,
-        w: shape === "pill" ? 20 + Math.random() * 14 : 0,
-        h: shape === "pill" ? 8 + Math.random() * 6 : 0,
-        hexRadius: shape === "hexagon" ? 14 + Math.random() * 10 : 0,
-        triSize: shape === "triangle" ? 12 + Math.random() * 10 : 0,
-        ringRadius: shape === "ring" ? 10 + Math.random() * 14 : 0,
+        w: shape === "pill" ? 22 + Math.random() * 14 : 0,
+        h: shape === "pill" ? 9 + Math.random() * 6 : 0,
+        hexRadius: shape === "hexagon" ? 16 + Math.random() * 12 : 0,
+        triSize: shape === "triangle" ? 14 + Math.random() * 10 : 0,
+        ringRadius: shape === "ring" ? 12 + Math.random() * 14 : 0,
       };
     }
 
     let particles = [];
     let geoShapes = [];
-    const PARTICLE_COUNT = isMobile ? 40 : 65;
-    const CONNECT_DIST = 120;
-    const MOUSE_RADIUS = 200;
-    const MOUSE_PULL = 0.015;
-    const GEO_MOUSE_RADIUS = 280;
-    const GEO_MOUSE_PULL = 0.004;
-    const GEO_MOUSE_ROTATE = 0.025;
+    const PARTICLE_COUNT = isMobile ? 50 : 80;
+    const CONNECT_DIST = 130;
+    const MOUSE_RADIUS = 220;
+    const MOUSE_PULL = 0.012;
+    const GEO_MOUSE_RADIUS = 300;
+    const GEO_MOUSE_PULL = 0.003;
+    const GEO_MOUSE_ROTATE = 0.020;
 
     function init() {
       w = window.innerWidth;
@@ -111,8 +111,8 @@ export default function ParticleBackground() {
       }
 
       geoShapes = [];
-      const backCount = isMobile ? 3 : 5;
-      const midCount = isMobile ? 3 : 5;
+      const backCount = isMobile ? 4 : 6;
+      const midCount = isMobile ? 4 : 6;
       for (let i = 0; i < backCount; i++) geoShapes.push(makeGeoShape(0));
       for (let i = 0; i < midCount; i++) geoShapes.push(makeGeoShape(1));
     }
@@ -187,17 +187,17 @@ export default function ParticleBackground() {
       lastTime = now;
       elapsed += dt * 0.02;
 
-      mouse.x = lerp(mouse.x, mouse.tx, 0.08);
-      mouse.y = lerp(mouse.y, mouse.ty, 0.08);
+      mouse.x = lerp(mouse.x, mouse.tx, 0.06);
+      mouse.y = lerp(mouse.y, mouse.ty, 0.06);
 
       ctx.clearRect(0, 0, w, h);
 
       const cursorGlow = mouse.x > -9000;
       if (cursorGlow) {
-        const grad = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 320);
-        grad.addColorStop(0, "rgba(254,239,234,0.08)");
-        grad.addColorStop(0.35, "rgba(190,201,221,0.05)");
-        grad.addColorStop(0.7, "rgba(134,153,167,0.03)");
+        const grad = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 350);
+        grad.addColorStop(0, "rgba(205,212,177,0.10)");
+        grad.addColorStop(0.3, "rgba(238,204,208,0.06)");
+        grad.addColorStop(0.6, "rgba(220,162,120,0.04)");
         grad.addColorStop(1, "rgba(0,0,0,0)");
         ctx.fillStyle = grad;
         ctx.fillRect(0, 0, w, h);
@@ -205,7 +205,6 @@ export default function ParticleBackground() {
 
       for (let i = 0; i < geoShapes.length; i++) {
         const g = geoShapes[i];
-        const layerSpeed = g.layer === 0 ? 0.15 : 0.3;
 
         const bobY = Math.sin(elapsed * g.bobSpeed + g.bobOffset) * g.bobAmp;
 
@@ -232,14 +231,14 @@ export default function ParticleBackground() {
             let angleDiff = targetRot - g.rotation;
             while (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
             while (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
-            g.rotSpeed += angleDiff * GEO_MOUSE_ROTATE * ((GEO_MOUSE_RADIUS - dist) / GEO_MOUSE_RADIUS) * 0.05;
+            g.rotSpeed += angleDiff * GEO_MOUSE_ROTATE * ((GEO_MOUSE_RADIUS - dist) / GEO_MOUSE_RADIUS) * 0.04;
           }
         }
 
         g.vx *= 0.998;
         g.vy *= 0.998;
         g.rotSpeed *= 0.995;
-        g.rotSpeed = Math.max(-0.03, Math.min(0.03, g.rotSpeed));
+        g.rotSpeed = Math.max(-0.025, Math.min(0.025, g.rotSpeed));
 
         const drawY = g.y + bobY;
         const drawX = g.x;
@@ -247,8 +246,8 @@ export default function ParticleBackground() {
         ctx.save();
         ctx.globalAlpha = g.alpha;
         ctx.strokeStyle = `rgba(${g.cr},${g.cg},${g.cb},1)`;
-        ctx.lineWidth = g.layer === 0 ? 1.2 : 1.5;
-        ctx.fillStyle = `rgba(${g.cr},${g.cg},${g.cb},0.12)`;
+        ctx.lineWidth = g.layer === 0 ? 1.0 : 1.4;
+        ctx.fillStyle = `rgba(${g.cr},${g.cg},${g.cb},0.15)`;
 
         if (g.shape === "hexagon") {
           drawHexagon(drawX, drawY, g.hexRadius * g.scale, g.rotation);
@@ -301,7 +300,7 @@ export default function ParticleBackground() {
         if (p.shape === "diamond") {
           ctx.save();
           ctx.translate(drawX, drawY);
-          ctx.rotate(Math.PI / 4 + elapsed * 0.3);
+          ctx.rotate(Math.PI / 4 + elapsed * 0.25);
           ctx.fillStyle = `rgba(${p.cr},${p.cg},${p.cb},${p.alpha})`;
           ctx.fillRect(-p.r, -p.r, p.r * 2, p.r * 2);
           ctx.restore();
@@ -313,9 +312,9 @@ export default function ParticleBackground() {
         }
 
         if (dist < MOUSE_RADIUS && cursorGlow) {
-          const glowAlpha = 0.15 * (1 - dist / MOUSE_RADIUS);
+          const glowAlpha = 0.18 * (1 - dist / MOUSE_RADIUS);
           ctx.beginPath();
-          ctx.arc(drawX, drawY, p.r + 5, 0, Math.PI * 2);
+          ctx.arc(drawX, drawY, p.r + 6, 0, Math.PI * 2);
           ctx.fillStyle = `rgba(${p.cr},${p.cg},${p.cb},${glowAlpha})`;
           ctx.fill();
         }
@@ -328,7 +327,7 @@ export default function ParticleBackground() {
           const d = Math.sqrt(ddx * ddx + ddy * ddy);
           if (d < CONNECT_DIST) {
             const fade = 1 - d / CONNECT_DIST;
-            const lineAlpha = 0.08 * fade * fade;
+            const lineAlpha = 0.10 * fade * fade;
             ctx.beginPath();
             ctx.moveTo(drawX, drawY);
             ctx.lineTo(q.x, q.y + qBobY);

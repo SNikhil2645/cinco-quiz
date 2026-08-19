@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ParticleBackground from "./components/ParticleBackground";
+import CardGlow from "./components/CardGlow";
 import Home from "./pages/Home";
 import ModeSelect from "./pages/ModeSelect";
 import SinglePlayerSetup from "./pages/SinglePlayerSetup";
@@ -16,6 +17,7 @@ export default function App() {
     <BrowserRouter>
       <div className="app-bg">
         <ParticleBackground />
+        <CardGlow />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/mode" element={<ModeSelect />} />
